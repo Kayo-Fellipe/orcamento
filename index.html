@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Orçamento - Serviços Audiovisuais</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Calculadora de Orçamento</h1>
+            <p>Serviços de Edição de Vídeo, Fotografia e Filmagem</p>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <div class="layout-grid">
+                <!-- Coluna de Serviços -->
+                <div class="services-column">
+                    <!-- Edição de Vídeo -->
+                    <section class="service-section" data-category="video">
+                        <h2 class="section-title">
+                            <span class="icon">🎬</span>
+                            Edição de Vídeo
+                        </h2>
+                        <div class="services-grid">
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="pre-wedding-edit" data-price="60">
+                                        <span class="service-name">Pré-Wedding</span>
+                                    </label>
+                                    <span class="service-price">R$ 60,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="pre-wedding-edit" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="casamento-edit" data-price="85">
+                                        <span class="service-name">Casamento (filmagem principal)</span>
+                                    </label>
+                                    <span class="service-price">R$ 70,00 - R$ 100,00/h</span>
+                                </div>
+                                <div class="service-controls">
+                                    <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="casamento-edit" disabled>
+                                    <select class="price-variant" data-service="casamento-edit" disabled>
+                                        <option value="70">Básico - R$ 70,00</option>
+                                        <option value="85" selected>Padrão - R$ 85,00</option>
+                                        <option value="100">Premium - R$ 100,00</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="reels-edit" data-price="80">
+                                        <span class="service-name">Vídeos para Redes Sociais (Reels)</span>
+                                    </label>
+                                    <span class="service-price">R$ 80,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="reels-edit" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="comercial-edit" data-price="90">
+                                        <span class="service-name">Vídeo Publicitário / Comercial</span>
+                                    </label>
+                                    <span class="service-price">R$ 80,00 - R$ 100,00/h</span>
+                                </div>
+                                <div class="service-controls">
+                                    <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="comercial-edit" disabled>
+                                    <select class="price-variant" data-service="comercial-edit" disabled>
+                                        <option value="80">Básico - R$ 80,00</option>
+                                        <option value="90" selected>Padrão - R$ 90,00</option>
+                                        <option value="100">Premium - R$ 100,00</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="corporativo-edit" data-price="70">
+                                        <span class="service-name">Evento Corporativo / Institucional</span>
+                                    </label>
+                                    <span class="service-price">R$ 60,00 - R$ 80,00/h</span>
+                                </div>
+                                <div class="service-controls">
+                                    <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="corporativo-edit" disabled>
+                                    <select class="price-variant" data-service="corporativo-edit" disabled>
+                                        <option value="60">Básico - R$ 60,00</option>
+                                        <option value="70" selected>Padrão - R$ 70,00</option>
+                                        <option value="80">Premium - R$ 80,00</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="imobiliario-edit" data-price="60">
+                                        <span class="service-name">Imobiliário / Arquitetura</span>
+                                    </label>
+                                    <span class="service-price">R$ 60,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="imobiliario-edit" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="esportivo-edit" data-price="80">
+                                        <span class="service-name">Evento Esportivo / Making of</span>
+                                    </label>
+                                    <span class="service-price">R$ 70,00 - R$ 90,00/h</span>
+                                </div>
+                                <div class="service-controls">
+                                    <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="esportivo-edit" disabled>
+                                    <select class="price-variant" data-service="esportivo-edit" disabled>
+                                        <option value="70">Básico - R$ 70,00</option>
+                                        <option value="80" selected>Padrão - R$ 80,00</option>
+                                        <option value="90">Premium - R$ 90,00</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="clipe-resumo" data-price="70">
+                                        <span class="service-name">Clipe Resumo (melhores momentos)</span>
+                                    </label>
+                                    <span class="service-price">R$ 70,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="clipe-resumo" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="correcao-cor" data-price="40">
+                                        <span class="service-name">Correção de Cor Avançada</span>
+                                    </label>
+                                    <span class="service-price">R$ 40,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="correcao-cor" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="trilha-legendas" data-price="50">
+                                        <span class="service-name">Inserção de Trilha / Legendas</span>
+                                    </label>
+                                    <span class="service-price">R$ 50,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="trilha-legendas" disabled>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Filmagem -->
+                    <section class="service-section" data-category="filmagem">
+                        <h2 class="section-title">
+                            <span class="icon">📹</span>
+                            Filmagem
+                        </h2>
+                        <div class="services-grid">
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="ensaio-filmagem" data-price="60">
+                                        <span class="service-name">Ensaio Pessoal / Lifestyle</span>
+                                    </label>
+                                    <span class="service-price">R$ 60,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="ensaio-filmagem" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="pre-wedding-filmagem" data-price="70">
+                                        <span class="service-name">Pré-Wedding (somente vídeo)</span>
+                                    </label>
+                                    <span class="service-price">R$ 70,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="pre-wedding-filmagem" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="casamento-filmagem" data-price="200">
+                                        <span class="service-name">Casamento (somente vídeo)</span>
+                                    </label>
+                                    <span class="service-price">R$ 200,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="casamento-filmagem" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="corporativo-filmagem" data-price="80">
+                                        <span class="service-name">Evento Corporativo</span>
+                                    </label>
+                                    <span class="service-price">R$ 80,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="corporativo-filmagem" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="imobiliario-filmagem" data-price="60">
+                                        <span class="service-name">Imobiliário / Arquitetura</span>
+                                    </label>
+                                    <span class="service-price">R$ 60,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="imobiliario-filmagem" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="esportivo-filmagem" data-price="70">
+                                        <span class="service-name">Evento Esportivo</span>
+                                    </label>
+                                    <span class="service-price">R$ 70,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="esportivo-filmagem" disabled>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Fotografia -->
+                    <section class="service-section" data-category="fotografia">
+                        <h2 class="section-title">
+                            <span class="icon">📸</span>
+                            Fotografia
+                        </h2>
+                        <div class="services-grid">
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="ensaio-foto" data-price="50">
+                                        <span class="service-name">Ensaio Pessoal / Lifestyle</span>
+                                    </label>
+                                    <span class="service-price">R$ 50,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="ensaio-foto" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="pre-wedding-foto" data-price="70">
+                                        <span class="service-name">Pré-Wedding (somente foto)</span>
+                                    </label>
+                                    <span class="service-price">R$ 70,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="pre-wedding-foto" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="casamento-foto" data-price="200">
+                                        <span class="service-name">Casamento (somente foto)</span>
+                                    </label>
+                                    <span class="service-price">R$ 200,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="casamento-foto" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="corporativo-foto" data-price="80">
+                                        <span class="service-name">Evento Corporativo</span>
+                                    </label>
+                                    <span class="service-price">R$ 80,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="corporativo-foto" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="imobiliario-foto" data-price="60">
+                                        <span class="service-name">Imobiliário / Arquitetura</span>
+                                    </label>
+                                    <span class="service-price">R$ 60,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="imobiliario-foto" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="esportivo-foto" data-price="70">
+                                        <span class="service-name">Evento Esportivo</span>
+                                    </label>
+                                    <span class="service-price">R$ 70,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="esportivo-foto" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="tratamento-fotos" data-price="50">
+                                        <span class="service-name">Tratamento de Fotos (pós-produção)</span>
+                                    </label>
+                                    <span class="service-price">R$ 50,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="tratamento-fotos" disabled>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Filmagem + Fotografia -->
+                    <section class="service-section" data-category="combo">
+                        <h2 class="section-title">
+                            <span class="icon">🎥</span>
+                            Filmagem + Fotografia
+                        </h2>
+                        <div class="services-grid">
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="ensaio-combo" data-price="80">
+                                        <span class="service-name">Ensaio Pessoal (combo)</span>
+                                    </label>
+                                    <span class="service-price">R$ 80,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="ensaio-combo" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="pre-wedding-combo" data-price="90">
+                                        <span class="service-name">Pré-Wedding (combo)</span>
+                                    </label>
+                                    <span class="service-price">R$ 90,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="pre-wedding-combo" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="corporativo-combo" data-price="100">
+                                        <span class="service-name">Evento Corporativo (combo)</span>
+                                    </label>
+                                    <span class="service-price">R$ 100,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="corporativo-combo" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="imobiliario-combo" data-price="80">
+                                        <span class="service-name">Imobiliário / Arquitetura (combo)</span>
+                                    </label>
+                                    <span class="service-price">R$ 80,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="imobiliario-combo" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="esportivo-combo" data-price="90">
+                                        <span class="service-name">Evento Esportivo (combo)</span>
+                                    </label>
+                                    <span class="service-price">R$ 90,00/h</span>
+                                </div>
+                                <input type="number" min="0" step="0.5" placeholder="Horas" class="hours-input" data-service="esportivo-combo" disabled>
+                            </div>
+
+                            <div class="service-card disabled">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" disabled>
+                                        <span class="service-name">Casamento (combo)</span>
+                                    </label>
+                                    <span class="service-price">❌ Não oferecido</span>
+                                </div>
+                                <input type="text" disabled placeholder="Não disponível" class="hours-input">
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Taxas de Serviço -->
+                    <section class="service-section" data-category="taxas">
+                        <h2 class="section-title">
+                            <span class="icon">💼</span>
+                            Taxas de Serviço
+                        </h2>
+                        <div class="services-grid">
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="softwares" data-price="40" data-type="fixed">
+                                        <span class="service-name">Softwares Profissionais</span>
+                                    </label>
+                                    <span class="service-price">R$ 40,00 (taxa fixa)</span>
+                                </div>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="equipamentos" data-price="30" data-type="fixed">
+                                        <span class="service-name">Equipamentos Utilizados</span>
+                                    </label>
+                                    <span class="service-price">R$ 30,00 (taxa fixa)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Coluna do Resumo -->
+                <div class="summary-column">
+                    <div class="budget-summary">
+                        <h2 class="summary-title">💰 Resumo do Orçamento</h2>
+                        
+                        <div class="summary-section">
+                            <h3>Serviços Selecionados</h3>
+                            <div class="selected-services" id="selectedServices">
+                                <p class="no-services">Nenhum serviço selecionado</p>
+                            </div>
+                        </div>
+
+                        <div class="summary-section">
+                            <h3>Taxas Adicionais</h3>
+                            <div class="selected-fees" id="selectedFees">
+                                <p class="no-services">Nenhuma taxa selecionada</p>
+                            </div>
+                        </div>
+
+                        <div class="totals-section">
+                            <div class="total-row">
+                                <span>Total de Horas:</span>
+                                <span id="totalHours">0h</span>
+                            </div>
+                            <div class="total-row">
+                                <span>Subtotal Serviços:</span>
+                                <span id="subtotalServices">R$ 0,00</span>
+                            </div>
+                            <div class="total-row">
+                                <span>Subtotal Taxas:</span>
+                                <span id="subtotalFees">R$ 0,00</span>
+                            </div>
+                            <div class="total-row final-total">
+                                <span>Valor Total:</span>
+                                <span id="totalValue">R$ 0,00</span>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-clear" id="clearAll">🗑️ Limpar Tudo</button>
+                            <button class="btn btn-export" id="exportBudget">📄 Exportar Orçamento</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
