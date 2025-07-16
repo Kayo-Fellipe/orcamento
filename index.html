@@ -412,21 +412,45 @@
                             <div class="service-card">
                                 <div class="service-header">
                                     <label class="service-label">
-                                        <input type="checkbox" class="service-checkbox" data-service="softwares" data-price="40" data-type="fixed">
+                                        <input type="checkbox" class="service-checkbox" data-service="softwares" data-type="custom">
                                         <span class="service-name">Softwares Profissionais</span>
                                     </label>
-                                    <span class="service-price">R$ 40,00 (taxa fixa)</span>
+                                    <span class="service-price">Valor personalizado</span>
                                 </div>
+                                <input type="number" min="0" step="0.01" placeholder="Valor em R$" class="custom-value-input" data-service="softwares" disabled>
                             </div>
 
                             <div class="service-card">
                                 <div class="service-header">
                                     <label class="service-label">
-                                        <input type="checkbox" class="service-checkbox" data-service="equipamentos" data-price="30" data-type="fixed">
+                                        <input type="checkbox" class="service-checkbox" data-service="equipamentos" data-type="custom">
                                         <span class="service-name">Equipamentos Utilizados</span>
                                     </label>
-                                    <span class="service-price">R$ 30,00 (taxa fixa)</span>
+                                    <span class="service-price">Valor personalizado</span>
                                 </div>
+                                <input type="number" min="0" step="0.01" placeholder="Valor em R$" class="custom-value-input" data-service="equipamentos" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="combustivel" data-type="custom">
+                                        <span class="service-name">Taxa de Combustível</span>
+                                    </label>
+                                    <span class="service-price">Valor personalizado</span>
+                                </div>
+                                <input type="number" min="0" step="0.01" placeholder="Valor em R$" class="custom-value-input" data-service="combustivel" disabled>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="transporte" data-type="custom">
+                                        <span class="service-name">Taxa de Horas de Transporte</span>
+                                    </label>
+                                    <span class="service-price">Valor personalizado</span>
+                                </div>
+                                <input type="number" min="0" step="0.01" placeholder="Valor em R$" class="custom-value-input" data-service="transporte" disabled>
                             </div>
                         </div>
                     </section>

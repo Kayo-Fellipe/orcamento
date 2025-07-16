@@ -208,6 +208,18 @@ body {
     background: white;
 }
 
+.custom-value-input {
+    padding: 0.75rem;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    background: white;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
 .hours-input {
     width: 100px;
     text-align: center;
@@ -218,13 +230,13 @@ body {
     font-size: 0.75rem;
 }
 
-.hours-input:focus, .price-variant:focus {
+.hours-input:focus, .price-variant:focus, .custom-value-input:focus {
     outline: none;
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.hours-input:disabled, .price-variant:disabled {
+.hours-input:disabled, .price-variant:disabled, .custom-value-input:disabled {
     background: #f9fafb;
     color: #9ca3af;
     cursor: not-allowed;

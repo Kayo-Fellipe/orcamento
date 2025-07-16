@@ -23,6 +23,14 @@ class BudgetCalculator {
             });
         });
 
+        // Campos de valor personalizado
+        const customValueFields = document.querySelectorAll('.custom-value-input');
+        customValueFields.forEach(field => {
+            field.addEventListener('input', (e) => {
+                this.handleCustomValueChange(e.target);
+            });
+        });
+
         // Seletores de preço (variants)
         const priceVariants = document.querySelectorAll('.price-variant');
         priceVariants.forEach(select => {
@@ -43,11 +51,19 @@ class BudgetCalculator {
 
     handleServiceSelection(checkbox) {
         const serviceId = checkbox.dataset.service;
-        const isFixed = checkbox.dataset.type === 'fixed';
+        const isCustom = checkbox.dataset.type === 'custom';
         
         if (checkbox.checked) {
-            if (isFixed) {
-                this.addFixedFee(serviceId, checkbox);
+            if (isCustom) {
+                const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
+                
+                // Ativar campo de valor personalizado
+                if (customValueField) {
+                    customValueField.disabled = false;
+                    customValueField.focus();
+                }
+
+                this.addCustomFee(serviceId, checkbox, customValueField);
             } else {
                 const hoursField = document.querySelector(`.hours-input[data-service="${serviceId}"]`);
                 const priceVariant = document.querySelector(`.price-variant[data-service="${serviceId}"]`);
@@ -66,8 +82,16 @@ class BudgetCalculator {
                 this.addService(serviceId, checkbox, hoursField, priceVariant);
             }
         } else {
-            if (isFixed) {
-                this.removeFixedFee(serviceId);
+            if (isCustom) {
+                const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
+                
+                // Desativar campo de valor personalizado
+                if (customValueField) {
+                    customValueField.disabled = true;
+                    customValueField.value = '';
+                }
+
+                this.removeCustomFee(serviceId);
             } else {
                 const hoursField = document.querySelector(`.hours-input[data-service="${serviceId}"]`);
                 const priceVariant = document.querySelector(`.price-variant[data-service="${serviceId}"]`);
@@ -109,6 +133,16 @@ class BudgetCalculator {
         }
     }
 
+    handleCustomValueChange(customValueField) {
+        const serviceId = customValueField.dataset.service;
+        const fee = this.selectedFees.get(serviceId);
+        
+        if (fee) {
+            fee.price = parseFloat(customValueField.value) || 0;
+            this.updateSummary();
+        }
+    }
+
     addService(serviceId, checkbox, hoursField, priceVariant) {
         const serviceCard = checkbox.closest('.service-card');
         const serviceName = serviceCard.querySelector('.service-name').textContent;
@@ -126,15 +160,14 @@ class BudgetCalculator {
         this.selectedServices.set(serviceId, service);
     }
 
-    addFixedFee(serviceId, checkbox) {
+    addCustomFee(serviceId, checkbox, customValueField) {
         const serviceCard = checkbox.closest('.service-card');
         const serviceName = serviceCard.querySelector('.service-name').textContent;
-        const price = parseFloat(checkbox.dataset.price);
 
         const fee = {
             id: serviceId,
             name: serviceName,
-            price: price,
+            price: customValueField ? (parseFloat(customValueField.value) || 0) : 0,
             element: serviceCard
         };
 
@@ -145,7 +178,7 @@ class BudgetCalculator {
         this.selectedServices.delete(serviceId);
     }
 
-    removeFixedFee(serviceId) {
+    removeCustomFee(serviceId) {
         this.selectedFees.delete(serviceId);
     }
 
@@ -256,9 +289,9 @@ class BudgetCalculator {
                 checkbox.checked = false;
                 
                 const serviceId = checkbox.dataset.service;
-                const isFixed = checkbox.dataset.type === 'fixed';
+                const isCustom = checkbox.dataset.type === 'custom';
                 
-                if (!isFixed) {
+                if (!isCustom) {
                     const hoursField = document.querySelector(`.hours-input[data-service="${serviceId}"]`);
                     const priceVariant = document.querySelector(`.price-variant[data-service="${serviceId}"]`);
                     
@@ -269,6 +302,13 @@ class BudgetCalculator {
                     
                     if (priceVariant) {
                         priceVariant.disabled = true;
+                    }
+                } else {
+                    const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
+                    
+                    if (customValueField) {
+                        customValueField.disabled = true;
+                        customValueField.value = '';
                     }
                 }
             });
