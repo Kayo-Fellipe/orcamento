@@ -2,6 +2,8 @@ class BudgetCalculator {
     constructor() {
         this.selectedServices = new Map();
         this.selectedFees = new Map();
+        this.transportFee = null;
+        this.discount = 0;
         this.initializeEventListeners();
         this.updateSummary();
     }
@@ -30,6 +32,14 @@ class BudgetCalculator {
                 this.handleCustomValueChange(e.target);
             });
         });
+
+        // Campo de horas de transporte
+        const transportHoursField = document.querySelector('.transport-hours-input');
+        if (transportHoursField) {
+            transportHoursField.addEventListener('input', (e) => {
+                this.handleTransportHoursChange(e.target);
+            });
+        }
 
         // Seletores de preço (variants)
         const priceVariants = document.querySelectorAll('.price-variant');
@@ -129,17 +139,102 @@ class BudgetCalculator {
         
         if (service) {
             service.pricePerHour = parseFloat(priceVariant.value);
+            this.updateTransportRate();
             this.updateSummary();
         }
     }
 
     handleCustomValueChange(customValueField) {
         const serviceId = customValueField.dataset.service;
-        const fee = this.selectedFees.get(serviceId);
         
-        if (fee) {
-            fee.price = parseFloat(customValueField.value) || 0;
+        if (serviceId === 'desconto') {
+            this.discount = parseFloat(customValueField.value) || 0;
+        } else {
+            const fee = this.selectedFees.get(serviceId);
+            if (fee) {
+                fee.price = parseFloat(customValueField.value) || 0;
+            }
+        }
+        
+        this.updateSummary();
+    }
+
+    handleTransportSelection(checkbox, isSelected) {
+        const transportControls = document.querySelector('.transport-controls');
+        const transportHoursField = document.querySelector('.transport-hours-input');
+        
+        if (isSelected) {
+            transportControls.style.display = 'block';
+            transportHoursField.disabled = false;
+            transportHoursField.focus();
+            
+            this.transportFee = {
+                id: 'transporte',
+                name: 'Taxa de Horas de Transporte',
+                hours: 0,
+                rate: 0,
+                total: 0
+            };
+        } else {
+            transportControls.style.display = 'none';
+            transportHoursField.disabled = true;
+            transportHoursField.value = '';
+            this.transportFee = null;
+        }
+        
+        this.updateTransportRate();
+    }
+
+    handleTransportHoursChange(hoursField) {
+        if (this.transportFee) {
+            this.transportFee.hours = parseFloat(hoursField.value) || 0;
+            this.updateTransportCalculation();
             this.updateSummary();
+        }
+    }
+
+    handleDiscountSelection(checkbox, customValueField, isSelected) {
+        if (isSelected) {
+            customValueField.disabled = false;
+            customValueField.focus();
+        } else {
+            customValueField.disabled = true;
+            customValueField.value = '';
+            this.discount = 0;
+        }
+    }
+
+    updateTransportRate() {
+        if (!this.transportFee) return;
+        
+        // Calcular a taxa média dos serviços selecionados
+        let totalRate = 0;
+        let serviceCount = 0;
+        
+        this.selectedServices.forEach(service => {
+            totalRate += service.pricePerHour;
+            serviceCount++;
+        });
+        
+        this.transportFee.rate = serviceCount > 0 ? totalRate / serviceCount : 0;
+        this.updateTransportCalculation();
+    }
+
+    updateTransportCalculation() {
+        if (!this.transportFee) return;
+        
+        this.transportFee.total = this.transportFee.hours * this.transportFee.rate;
+        
+        // Atualizar elementos visuais
+        const rateElement = document.querySelector('.transport-rate');
+        const totalElement = document.querySelector('.transport-total');
+        
+        if (rateElement) {
+            rateElement.textContent = `Valor/hora: ${this.formatCurrency(this.transportFee.rate)}`;
+        }
+        
+        if (totalElement) {
+            totalElement.textContent = `Total: ${this.formatCurrency(this.transportFee.total)}`;
         }
     }
 
@@ -158,6 +253,7 @@ class BudgetCalculator {
         };
 
         this.selectedServices.set(serviceId, service);
+        this.updateTransportRate();
     }
 
     addCustomFee(serviceId, checkbox, customValueField) {
@@ -185,6 +281,7 @@ class BudgetCalculator {
     updateSummary() {
         this.updateServicesSection();
         this.updateFeesSection();
+        this.updateDiscountSection();
         this.updateTotals();
     }
 
@@ -208,7 +305,10 @@ class BudgetCalculator {
         const feesContainer = document.getElementById('selectedFees');
         feesContainer.innerHTML = '';
 
-        if (this.selectedFees.size === 0) {
+        const hasRegularFees = this.selectedFees.size > 0;
+        const hasTransportFee = this.transportFee && this.transportFee.total > 0;
+
+        if (!hasRegularFees && !hasTransportFee) {
             feesContainer.innerHTML = '<p class="no-services">Nenhuma taxa selecionada</p>';
             return;
         }
@@ -217,6 +317,35 @@ class BudgetCalculator {
             const summaryElement = this.createFeeSummaryElement(fee);
             feesContainer.appendChild(summaryElement);
         });
+
+        // Adicionar taxa de transporte se existir
+        if (hasTransportFee) {
+            const transportSummary = this.createTransportSummaryElement();
+            feesContainer.appendChild(transportSummary);
+        }
+    }
+
+    updateDiscountSection() {
+        const discountSection = document.getElementById('discountSection');
+        const discountContainer = document.getElementById('selectedDiscount');
+        const discountRow = document.getElementById('discountRow');
+        
+        if (this.discount > 0) {
+            discountSection.style.display = 'block';
+            discountRow.style.display = 'flex';
+            
+            discountContainer.innerHTML = `
+                <div class="discount-summary">
+                    <span class="discount-summary-name">Desconto aplicado</span>
+                    <span class="discount-summary-value">- ${this.formatCurrency(this.discount)}</span>
+                </div>
+            `;
+            
+            document.getElementById('discountValue').textContent = `- ${this.formatCurrency(this.discount)}`;
+        } else {
+            discountSection.style.display = 'none';
+            discountRow.style.display = 'none';
+        }
     }
 
     updateTotals() {
@@ -241,7 +370,13 @@ class BudgetCalculator {
             subtotalFees += fee.price;
         });
 
-        const totalValue = subtotalServices + subtotalFees;
+        // Adicionar taxa de transporte
+        if (this.transportFee) {
+            subtotalFees += this.transportFee.total;
+            totalHours += this.transportFee.hours;
+        }
+
+        const totalValue = subtotalServices + subtotalFees - this.discount;
 
         // Atualizar elementos
         totalHoursElement.textContent = totalHours.toFixed(1) + 'h';

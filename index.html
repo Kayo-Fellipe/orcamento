@@ -448,9 +448,26 @@
                                         <input type="checkbox" class="service-checkbox" data-service="transporte" data-type="custom">
                                         <span class="service-name">Taxa de Horas de Transporte</span>
                                     </label>
-                                    <span class="service-price">Valor personalizado</span>
+                                    <span class="service-price">Baseado no serviço</span>
                                 </div>
-                                <input type="number" min="0" step="0.01" placeholder="Valor em R$" class="custom-value-input" data-service="transporte" disabled>
+                                <div class="transport-controls" style="display: none;">
+                                    <input type="number" min="0" step="0.5" placeholder="Horas de trajeto" class="transport-hours-input" data-service="transporte" disabled>
+                                    <div class="transport-info">
+                                        <span class="transport-rate">Valor/hora: R$ 0,00</span>
+                                        <span class="transport-total">Total: R$ 0,00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <label class="service-label">
+                                        <input type="checkbox" class="service-checkbox" data-service="desconto" data-type="custom">
+                                        <span class="service-name">Desconto</span>
+                                    </label>
+                                    <span class="service-price">Valor em R$</span>
+                                </div>
+                                <input type="number" min="0" step="0.01" placeholder="Valor do desconto" class="custom-value-input" data-service="desconto" disabled>
                             </div>
                         </div>
                     </section>
@@ -475,6 +492,12 @@
                             </div>
                         </div>
 
+                        <div class="summary-section" id="discountSection" style="display: none;">
+                            <h3>Desconto</h3>
+                            <div class="selected-discount" id="selectedDiscount">
+                            </div>
+                        </div>
+
                         <div class="totals-section">
                             <div class="total-row">
                                 <span>Total de Horas:</span>
@@ -487,6 +510,10 @@
                             <div class="total-row">
                                 <span>Subtotal Taxas:</span>
                                 <span id="subtotalFees">R$ 0,00</span>
+                            </div>
+                            <div class="total-row discount-row" id="discountRow" style="display: none;">
+                                <span>Desconto:</span>
+                                <span id="discountValue">- R$ 0,00</span>
                             </div>
                             <div class="total-row final-total">
                                 <span>Valor Total:</span>
