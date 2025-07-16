@@ -533,7 +533,12 @@ class BudgetCalculator {
             subtotalFees += fee.price;
         });
 
-        return subtotalServices + subtotalFees;
+        // Adicionar taxa de transporte
+        if (this.transportFee) {
+            subtotalFees += this.transportFee.total;
+        }
+
+        return subtotalServices + subtotalFees - this.discount;
     }
 
     downloadTextFile(content, filename) {
