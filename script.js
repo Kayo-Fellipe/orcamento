@@ -240,6 +240,65 @@ class BudgetCalculator {
         }
     }
 
+    validateAndFormatHours(hoursField) {
+        let value = parseFloat(hoursField.value) || 0;
+        
+        // Converter decimais incorretos para horas válidas
+        if (value > 0) {
+            const hours = Math.floor(value);
+            const decimal = value - hours;
+            
+            // Se o decimal for maior que 0.59, converter para a próxima hora
+            if (decimal > 0.59) {
+                value = hours + 1;
+            } else if (decimal > 0 && decimal < 0.5) {
+                // Arredondar para 0.5 (30 minutos)
+                value = hours + 0.5;
+            } else if (decimal >= 0.5 && decimal <= 0.59) {
+                // Manter como 0.5 (30 minutos)
+                value = hours + 0.5;
+            }
+            
+            hoursField.value = value;
+        }
+    }
+
+    formatCurrencyInput(input) {
+        let value = input.value.replace(/\D/g, ''); // Remove tudo que não é dígito
+        
+        if (value === '') {
+            input.value = '';
+            return;
+        }
+        
+        // Converte para centavos
+        value = parseInt(value) / 100;
+        
+        // Formata como moeda brasileira
+        input.value = value.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        });
+    }
+
+    finalizeCurrencyFormat(input) {
+        if (input.value === '' || input.value === 'R$ 0,00') {
+            input.value = '';
+        }
+    }
+
+    parseCurrencyValue(currencyString) {
+        if (!currencyString) return 0;
+        
+        // Remove R$, espaços e converte vírgula para ponto
+        const cleanValue = currencyString
+            .replace(/R\$\s?/g, '')
+            .replace(/\./g, '')
+            .replace(',', '.');
+            
+        return parseFloat(cleanValue) || 0;
+    }
+
     calculateTransportRate() {
         // Calcular a taxa média dos serviços selecionados
         let totalRate = 0;
