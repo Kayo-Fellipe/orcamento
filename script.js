@@ -65,15 +65,22 @@ class BudgetCalculator {
         
         if (checkbox.checked) {
             if (isCustom) {
-                const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
-                
-                // Ativar campo de valor personalizado
-                if (customValueField) {
-                    customValueField.disabled = false;
-                    customValueField.focus();
-                }
+                if (serviceId === 'transporte') {
+                    this.handleTransportSelection(checkbox, true);
+                } else if (serviceId === 'desconto') {
+                    const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
+                    this.handleDiscountSelection(checkbox, customValueField, true);
+                } else {
+                    const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
+                    
+                    // Ativar campo de valor personalizado
+                    if (customValueField) {
+                        customValueField.disabled = false;
+                        customValueField.focus();
+                    }
 
-                this.addCustomFee(serviceId, checkbox, customValueField);
+                    this.addCustomFee(serviceId, checkbox, customValueField);
+                }
             } else {
                 const hoursField = document.querySelector(`.hours-input[data-service="${serviceId}"]`);
                 const priceVariant = document.querySelector(`.price-variant[data-service="${serviceId}"]`);
@@ -93,15 +100,22 @@ class BudgetCalculator {
             }
         } else {
             if (isCustom) {
-                const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
-                
-                // Desativar campo de valor personalizado
-                if (customValueField) {
-                    customValueField.disabled = true;
-                    customValueField.value = '';
-                }
+                if (serviceId === 'transporte') {
+                    this.handleTransportSelection(checkbox, false);
+                } else if (serviceId === 'desconto') {
+                    const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
+                    this.handleDiscountSelection(checkbox, customValueField, false);
+                } else {
+                    const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
+                    
+                    // Desativar campo de valor personalizado
+                    if (customValueField) {
+                        customValueField.disabled = true;
+                        customValueField.value = '';
+                    }
 
-                this.removeCustomFee(serviceId);
+                    this.removeCustomFee(serviceId);
+                }
             } else {
                 const hoursField = document.querySelector(`.hours-input[data-service="${serviceId}"]`);
                 const priceVariant = document.querySelector(`.price-variant[data-service="${serviceId}"]`);
