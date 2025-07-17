@@ -39,16 +39,12 @@ class BudgetCalculator {
         const customValueFields = document.querySelectorAll('.custom-value-input');
         customValueFields.forEach(field => {
             field.addEventListener('input', (e) => {
-                this.handleCustomValueChange(e.target);
-            });
-            
-            // Adicionar formatação de moeda
-            field.addEventListener('input', (e) => {
                 this.formatCurrencyInput(e.target);
             });
             
             field.addEventListener('blur', (e) => {
                 this.finalizeCurrencyFormat(e.target);
+                this.handleCustomValueChange(e.target);
             });
         });
 
@@ -243,19 +239,15 @@ class BudgetCalculator {
     validateAndFormatHours(hoursField) {
         let value = parseFloat(hoursField.value) || 0;
         
-        // Converter decimais incorretos para horas válidas
         if (value > 0) {
             const hours = Math.floor(value);
             const decimal = value - hours;
             
-            // Se o decimal for maior que 0.59, converter para a próxima hora
-            if (decimal > 0.59) {
+            // Se o decimal for maior que 0.5, converter para a próxima hora
+            if (decimal > 0.5) {
                 value = hours + 1;
-            } else if (decimal > 0 && decimal < 0.5) {
-                // Arredondar para 0.5 (30 minutos)
-                value = hours + 0.5;
-            } else if (decimal >= 0.5 && decimal <= 0.59) {
-                // Manter como 0.5 (30 minutos)
+            } else if (decimal > 0 && decimal <= 0.5) {
+                // Converter para 0.5 (30 minutos)
                 value = hours + 0.5;
             }
             
