@@ -238,17 +238,16 @@ class BudgetCalculator {
     }
 
     formatTimeInput(input) {
-        let value = input.value.replace(/[^\d:]/g, ''); // Remove tudo exceto números e :
+        let value = input.value.replace(/[^\d]/g, ''); // Remove tudo exceto números
         
-        // Remove múltiplos dois pontos
-        const parts = value.split(':');
-        if (parts.length > 2) {
-            value = parts[0] + ':' + parts[1];
+        // Limita a 4 dígitos
+        if (value.length > 4) {
+            value = value.substring(0, 4);
         }
         
         // Adiciona dois pontos automaticamente após 2 dígitos
-        if (value.length === 2 && !value.includes(':')) {
-            value = value + ':';
+        if (value.length >= 3) {
+            value = value.substring(0, 2) + ':' + value.substring(2);
         }
         
         input.value = value;
