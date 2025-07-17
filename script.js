@@ -21,6 +21,7 @@ class BudgetCalculator {
         const hoursFields = document.querySelectorAll('.hours-input');
         hoursFields.forEach(field => {
             field.addEventListener('input', (e) => {
+                this.formatTimeInput(e.target);
                 const serviceId = e.target.dataset.service;
                 if (serviceId === 'transporte') {
                     this.handleTransportHoursChange(e.target);
@@ -31,7 +32,7 @@ class BudgetCalculator {
             
             // Adicionar validação para horas
             field.addEventListener('blur', (e) => {
-                this.validateAndFormatHours(e.target);
+                this.validateTimeInput(e.target);
             });
         });
 
@@ -165,7 +166,7 @@ class BudgetCalculator {
         const service = this.selectedServices.get(serviceId);
         
         if (service) {
-            service.hours = parseFloat(hoursField.value) || 0;
+            service.hours = this.parseTimeToHours(hoursField.value);
             this.updateSummary();
         }
     }
@@ -204,7 +205,7 @@ class BudgetCalculator {
         this.transportFee = {
             id: serviceId,
             name: serviceName,
-            hours: hoursField ? (parseFloat(hoursField.value) || 0) : 0,
+            hours: hoursField ? this.parseTimeToHours(hoursField.value) : 0,
             rate: this.calculateTransportRate(),
             element: serviceCard
         };
@@ -218,7 +219,7 @@ class BudgetCalculator {
 
     handleTransportHoursChange(hoursField) {
         if (this.transportFee) {
-            this.transportFee.hours = parseFloat(hoursField.value) || 0;
+            this.transportFee.hours = this.parseTimeToHours(hoursField.value);
             this.transportFee.rate = this.calculateTransportRate();
             this.updateTransportCalculation();
             this.updateSummary();
@@ -236,23 +237,71 @@ class BudgetCalculator {
         }
     }
 
-    validateAndFormatHours(hoursField) {
-        let value = parseFloat(hoursField.value) || 0;
+    formatTimeInput(input) {
+        let value = input.value.replace(/[^\d:]/g, ''); // Remove tudo exceto números e :
         
-        if (value > 0) {
-            const hours = Math.floor(value);
-            const decimal = value - hours;
+        // Remove múltiplos dois pontos
+        const parts = value.split(':');
+        if (parts.length > 2) {
+            value = parts[0] + ':' + parts[1];
+        }
+        
+        // Adiciona dois pontos automaticamente após 2 dígitos
+        if (value.length === 2 && !value.includes(':')) {
+            value = value + ':';
+        }
+        
+        input.value = value;
+    }
+
+    validateTimeInput(input) {
+        const value = input.value;
+        
+        if (!value) {
+            return;
+        }
+        
+        // Regex para validar formato HH:MM
+        const timeRegex = /^(\d{1,2}):(\d{2})$/;
+        const match = value.match(timeRegex);
+        
+        if (match) {
+            let hours = parseInt(match[1]);
+            let minutes = parseInt(match[2]);
             
-            // Se o decimal for maior que 0.5, converter para a próxima hora
-            if (decimal > 0.5) {
-                value = hours + 1;
-            } else if (decimal > 0 && decimal <= 0.5) {
-                // Converter para 0.5 (30 minutos)
-                value = hours + 0.5;
+            // Validar minutos (0-59)
+            if (minutes > 59) {
+                minutes = 59;
             }
             
-            hoursField.value = value;
+            // Formatar com zeros à esquerda
+            const formattedTime = String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0');
+            input.value = formattedTime;
+        } else {
+            // Se não estiver no formato correto, limpar o campo
+            input.value = '';
         }
+    }
+
+    parseTimeToHours(timeString) {
+        if (!timeString) return 0;
+        
+        const timeRegex = /^(\d{1,2}):(\d{2})$/;
+        const match = timeString.match(timeRegex);
+        
+        if (match) {
+            const hours = parseInt(match[1]);
+            const minutes = parseInt(match[2]);
+            return hours + (minutes / 60);
+        }
+        
+        return 0;
+    }
+
+    formatHoursToTime(hours) {
+        const wholeHours = Math.floor(hours);
+        const minutes = Math.round((hours - wholeHours) * 60);
+        return String(wholeHours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0');
     }
 
     formatCurrencyInput(input) {
@@ -321,7 +370,7 @@ class BudgetCalculator {
             id: serviceId,
             name: serviceName,
             pricePerHour: currentPrice,
-            hours: hoursField ? (parseFloat(hoursField.value) || 0) : 0,
+            hours: hoursField ? this.parseTimeToHours(hoursField.value) : 0,
             element: serviceCard
         };
 
@@ -464,7 +513,7 @@ class BudgetCalculator {
         const totalValue = subtotalServices + subtotalFees - this.discount;
 
         // Atualizar elementos
-        totalHoursElement.textContent = totalHours.toFixed(1) + 'h';
+        totalHoursElement.textContent = this.formatHoursToTime(totalHours);
         subtotalServicesElement.textContent = this.formatCurrency(subtotalServices);
         subtotalFeesElement.textContent = this.formatCurrency(subtotalFees);
         totalValueElement.textContent = this.formatCurrency(totalValue);
@@ -477,7 +526,7 @@ class BudgetCalculator {
         div.innerHTML = `
             <span class="service-summary-name">${service.name}</span>
             <div class="service-summary-details">
-                <span>${service.hours}h × R$ ${service.pricePerHour.toFixed(2)}</span>
+                <span>${this.formatHoursToTime(service.hours)} × R$ ${service.pricePerHour.toFixed(2)}</span>
                 <span class="service-summary-value">${this.formatCurrency(serviceValue)}</span>
             </div>
         `;
@@ -506,7 +555,7 @@ class BudgetCalculator {
         div.innerHTML = `
             <span class="transport-summary-name">${this.transportFee.name}</span>
             <div class="transport-summary-details">
-                <span>${this.transportFee.hours}h × ${this.formatCurrency(this.transportFee.rate)}</span>
+                <span>${this.formatHoursToTime(this.transportFee.hours)} × ${this.formatCurrency(this.transportFee.rate)}</span>
                 <span class="transport-summary-value">${this.formatCurrency(transportTotal)}</span>
             </div>
         `;
@@ -593,12 +642,12 @@ class BudgetCalculator {
                 subtotalServices += serviceValue;
 
                 exportText += `${service.name}\n`;
-                exportText += `  • Horas: ${service.hours}h\n`;
+                exportText += `  • Tempo: ${this.formatHoursToTime(service.hours)}\n`;
                 exportText += `  • Valor/hora: R$ ${service.pricePerHour.toFixed(2)}\n`;
                 exportText += `  • Subtotal: ${this.formatCurrency(serviceValue)}\n\n`;
             });
 
-            exportText += `Total de Horas: ${totalHours.toFixed(1)}h\n`;
+            exportText += `Total de Tempo: ${this.formatHoursToTime(totalHours)}\n`;
             exportText += `Subtotal Serviços: ${this.formatCurrency(subtotalServices)}\n\n`;
         }
 
@@ -619,7 +668,7 @@ class BudgetCalculator {
                 const transportTotal = this.transportFee.hours * this.transportFee.rate;
                 subtotalFees += transportTotal;
                 exportText += `${this.transportFee.name}:\n`;
-                exportText += `  • Horas: ${this.transportFee.hours}h\n`;
+                exportText += `  • Tempo: ${this.formatHoursToTime(this.transportFee.hours)}\n`;
                 exportText += `  • Valor/hora: ${this.formatCurrency(this.transportFee.rate)}\n`;
                 exportText += `  • Subtotal: ${this.formatCurrency(transportTotal)}\n`;
             }

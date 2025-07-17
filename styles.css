@@ -221,8 +221,11 @@ body {
 }
 
 .hours-input {
-    width: 100px;
+    width: 80px;
     text-align: center;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    letter-spacing: 1px;
 }
 
 .price-variant {
