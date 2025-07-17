@@ -28,6 +28,11 @@ class BudgetCalculator {
                     this.handleHoursChange(e.target);
                 }
             });
+            
+            // Adicionar validação para horas
+            field.addEventListener('blur', (e) => {
+                this.validateAndFormatHours(e.target);
+            });
         });
 
         // Campos de valor personalizado
@@ -35,6 +40,15 @@ class BudgetCalculator {
         customValueFields.forEach(field => {
             field.addEventListener('input', (e) => {
                 this.handleCustomValueChange(e.target);
+            });
+            
+            // Adicionar formatação de moeda
+            field.addEventListener('input', (e) => {
+                this.formatCurrencyInput(e.target);
+            });
+            
+            field.addEventListener('blur', (e) => {
+                this.finalizeCurrencyFormat(e.target);
             });
         });
 
@@ -173,13 +187,14 @@ class BudgetCalculator {
 
     handleCustomValueChange(customValueField) {
         const serviceId = customValueField.dataset.service;
+        const rawValue = this.parseCurrencyValue(customValueField.value);
         
         if (serviceId === 'desconto') {
-            this.discount = parseFloat(customValueField.value) || 0;
+            this.discount = rawValue;
         } else {
             const fee = this.selectedFees.get(serviceId);
             if (fee) {
-                fee.price = parseFloat(customValueField.value) || 0;
+                fee.price = rawValue;
             }
         }
         
