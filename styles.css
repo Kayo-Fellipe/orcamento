@@ -7,7 +7,7 @@
 
 :root {
   /* Color System - Updated to new palette */
-  --color-primary: #8A2BE2;
+  --color-primary: #0f0f0f;
   --color-primary-light: #9932CC;
   --color-primary-dark: #7B68EE;
   
@@ -75,15 +75,6 @@ body {
     font-size: 24px;
     line-height: 1;
 }
-
-.icon-video::before { content: "🎬"; }
-.icon-camera::before { content: "📹"; }
-.icon-photo::before { content: "📸"; }
-.icon-combo::before { content: "🎥"; }
-.icon-money::before { content: "💰"; }
-.icon-briefcase::before { content: "💼"; }
-.icon-trash::before { content: "🗑️"; }
-.icon-document::before { content: "📄"; }
 
 /* Header */
 .header {
