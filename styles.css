@@ -200,9 +200,8 @@ body {
 .service-checkbox {
     width: 20px;
     height: 20px;
-    accent-color: var(--color-dark);
+    accent-color: var(--color-primary);
     margin-top: 2px;
-    background: rgba(255, 255, 255, 0.1);
 }
 
 .service-name {
