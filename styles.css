@@ -206,7 +206,7 @@ body {
 
 .service-name {
     font-weight: 600;
-    color: var(--color-light);
+    color: var(--color-primary);
     line-height: 1.4;
 }
 
