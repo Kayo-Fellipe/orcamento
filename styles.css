@@ -185,7 +185,7 @@ body {
     border-radius: var(--border-radius);
     padding: var(--space-4);
     transition: var(--transition);
-    background: var(--color-light-800);
+    background-color: var(--color-dark-700);
 }
 
 .service-card:hover {
