@@ -321,7 +321,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: var(--space-3);
-    background: var(--color-light-800);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: var(--border-radius);
     margin-bottom: var(--space-2);
     border-left: 4px solid var(--color-primary);
@@ -358,7 +358,7 @@ body {
 
 .service-summary-name, .fee-summary-name {
     font-weight: 500;
-    color: var(--color-dark-600);
+    color: var(--color-light);
     flex: 1;
     font-size: 0.875rem;
 }
