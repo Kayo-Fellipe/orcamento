@@ -125,10 +125,7 @@ body {
 
 /* Service sections */
 .service-section {
-    background-color: var(--color-dark-700);;
-    border-radius: calc(var(--border-radius) * 2);
     padding: var(--space-5);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     transition: var(--transition);
 }
 
