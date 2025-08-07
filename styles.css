@@ -268,8 +268,7 @@ color: var(--color-primary);
 }
 
 .hours-input:disabled, .price-variant:disabled, .custom-value-input:disabled {
-    background: var(--color-light-800);
-    color: var(--color-light);
+
     cursor: not-allowed;
     border-color: var(--color-light-700);
 }
