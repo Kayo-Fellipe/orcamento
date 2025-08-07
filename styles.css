@@ -168,8 +168,8 @@ body {
 }
 
 .service-section[data-category="taxas"] .section-title {
-    color: var(--color-error);
-    border-bottom-color: var(--color-error);
+    color: var(--color-primary-light);
+    border-bottom-color: var(--color-primary-light);
 }
 
 /* Grid de serviços */
