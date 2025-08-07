@@ -147,18 +147,18 @@ body {
 }
 
 .service-section[data-category="filmagem"] .section-title {
-color: var(--color-light);
+    color: var(--color-light);
     border-bottom-color: var(--color-light);
 }
 
 .service-section[data-category="fotografia"] .section-title {
-color: var(--color-light);
+    color: var(--color-light);
     border-bottom-color: var(--color-light);
 }
 
 .service-section[data-category="combo"] .section-title {
-    color: var(--color-warning);
-    border-bottom-color: var(--color-warning);
+    color: var(--color-light);
+    border-bottom-color: var(--color-light);
 }
 
 .service-section[data-category="taxas"] .section-title {
