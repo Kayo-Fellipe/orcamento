@@ -217,6 +217,7 @@ body {
     white-space: nowrap;
     background: rgba(16, 185, 129, 0.1);
     padding: var(--space-1) var(--space-2);
+    border-radius: var(--border-radius);
 }
 
 .service-controls {
@@ -227,7 +228,7 @@ body {
 
 .hours-input, .price-variant {
     padding: var(--space-3);
-    border: 2px solid var(--color-light-600);
+    border-radius: var(--border-radius);
     font-size: 0.875rem;
     font-weight: 500;
     transition: var(--transition);
@@ -236,6 +237,7 @@ body {
 
 .custom-value-input {
     padding: var(--space-3);
+    border-radius: var(--border-radius);
     font-size: 0.875rem;
     font-weight: 500;
     transition: var(--transition);
@@ -264,9 +266,7 @@ body {
 }
 
 .hours-input:disabled, .price-variant:disabled, .custom-value-input:disabled {
-
     cursor: not-allowed;
-    border-color: var(--color-light-700);
 }
 
 /* Budget summary */
