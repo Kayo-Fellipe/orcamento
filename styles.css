@@ -188,23 +188,6 @@ body {
     background-color: var(--color-dark-700);
 }
 
-.service-card:hover {
-    border-color: var(--color-primary);
-    background: var(--color-light);
-    transform: translateY(-1px);
-}
-
-.service-card.disabled {
-    opacity: 0.5;
-    background: var(--color-light-700);
-}
-
-.service-card.disabled:hover {
-    border-color: var(--color-light-700);
-    background: var(--color-light-700);
-    transform: none;
-}
-
 .service-header {
     display: flex;
     justify-content: space-between;
