@@ -137,27 +137,27 @@ body {
     font-weight: 600;
     margin-bottom: var(--space-4);
     padding-bottom: var(--space-3);
-    border-bottom: 3px solid;
+    border-bottom: 1px solid;
 }
 
 /* Cores por categoria */
 .service-section[data-category="video"] .section-title {
-    color: var(--color-light);
+    color: var(--color-primary);
     border-bottom-color: var(--color-primary);
 }
 
 .service-section[data-category="filmagem"] .section-title {
-    color: var(--color-light);
+    color: var(--color-primary);
     border-bottom-color: var(--color-primary);
 }
 
 .service-section[data-category="fotografia"] .section-title {
-    color: var(--color-light);
+    color: var(--color-primary);
     border-bottom-color: var(--color-primary);
 }
 
 .service-section[data-category="combo"] .section-title {
-    color: var(--color-light);
+    color: var(--color-primary);
     border-bottom-color: var(--color-primary);
 }
 
@@ -268,6 +268,7 @@ body {
 }
 
 .hours-input:disabled, .price-variant:disabled, .custom-value-input:disabled {
+
     cursor: not-allowed;
     border-color: var(--color-light-700);
 }
