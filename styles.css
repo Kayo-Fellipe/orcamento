@@ -153,23 +153,23 @@ body {
 }
 
 .service-section[data-category="filmagem"] .section-title {
-    color: var(--color-success);
-    border-bottom-color: var(--color-success);
+color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
 }
 
 .service-section[data-category="fotografia"] .section-title {
+color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+.service-section[data-category="combo"] .section-title {
     color: var(--color-warning);
     border-bottom-color: var(--color-warning);
 }
 
-.service-section[data-category="combo"] .section-title {
-    color: var(--color-primary-light);
-    border-bottom-color: var(--color-primary-light);
-}
-
 .service-section[data-category="taxas"] .section-title {
-    color: var(--color-primary-light);
-    border-bottom-color: var(--color-primary-light);
+    color: var(--color-error);
+    border-bottom-color: var(--color-error);
 }
 
 /* Grid de serviços */
