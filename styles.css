@@ -142,18 +142,18 @@ body {
 
 /* Cores por categoria */
 .service-section[data-category="video"] .section-title {
-    color: var(--color-primary);
-    border-bottom-color: var(--color-primary);
+    color: var(--color-light);
+    border-bottom-color: var(--color-light);
 }
 
 .service-section[data-category="filmagem"] .section-title {
-color: var(--color-primary);
-    border-bottom-color: var(--color-primary);
+color: var(--color-light);
+    border-bottom-color: var(--color-light);
 }
 
 .service-section[data-category="fotografia"] .section-title {
-color: var(--color-primary);
-    border-bottom-color: var(--color-primary);
+color: var(--color-light);
+    border-bottom-color: var(--color-light);
 }
 
 .service-section[data-category="combo"] .section-title {
@@ -268,7 +268,6 @@ color: var(--color-primary);
 }
 
 .hours-input:disabled, .price-variant:disabled, .custom-value-input:disabled {
-
     cursor: not-allowed;
     border-color: var(--color-light-700);
 }
