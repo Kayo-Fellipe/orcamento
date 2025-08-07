@@ -206,7 +206,7 @@ body {
 
 .service-name {
     font-weight: 600;
-    color: var(--color-primary);
+    color: var(--color-light);
     line-height: 1.4;
 }
 
@@ -233,6 +233,7 @@ body {
     font-weight: 500;
     transition: var(--transition);
     background: rgba(255, 255, 255, 0.1);
+    color: var(--color-light);
 }
 
 .custom-value-input {
