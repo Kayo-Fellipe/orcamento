@@ -84,7 +84,7 @@ body {
     padding: var(--space-2) 0;
     text-align: center;
     color: var(--color-light);
-    margin-bottom: var(--space-5);
+    margin-bottom: var(--space-2);
 }
 
 .header h1 {
