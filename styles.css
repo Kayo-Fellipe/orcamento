@@ -369,7 +369,7 @@ color: var(--color-primary);
 
 .service-summary-name, .fee-summary-name {
     font-weight: 500;
-    color: var(--color-light);
+    color: var(--color-dark-600);
     flex: 1;
     font-size: 0.875rem;
 }
