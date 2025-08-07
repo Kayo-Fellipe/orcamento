@@ -51,7 +51,6 @@
 body {
     font-family: var(--font-main);
     line-height: 1.6;
-    color: var(--color-dark);
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
     min-height: 100vh;
 }
