@@ -218,7 +218,7 @@ color: var(--color-primary);
 
 .service-price {
     font-size: 0.875rem;
-    color: var(--color-light);
+    color: var(--color-success);
     font-weight: 700;
     white-space: nowrap;
     background: rgba(16, 185, 129, 0.1);
@@ -275,7 +275,7 @@ color: var(--color-primary);
 
 .hours-input:disabled, .price-variant:disabled, .custom-value-input:disabled {
     background: var(--color-light-800);
-    color: var(--color-light);
+    color: var(--color-gray-light);
     cursor: not-allowed;
     border-color: var(--color-light-700);
 }
