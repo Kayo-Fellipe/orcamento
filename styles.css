@@ -125,7 +125,7 @@ body {
 
 /* Service sections */
 .service-section {
-    color: var(--color-light);
+    color: var(--color-dark);
     border-radius: calc(var(--border-radius) * 2);
     padding: var(--space-5);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
