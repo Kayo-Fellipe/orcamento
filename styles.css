@@ -143,22 +143,22 @@ body {
 /* Cores por categoria */
 .service-section[data-category="video"] .section-title {
     color: var(--color-light);
-    border-bottom-color: var(--color-light);
+    border-bottom-color: var(--color-primary);
 }
 
 .service-section[data-category="filmagem"] .section-title {
     color: var(--color-light);
-    border-bottom-color: var(--color-light);
+    border-bottom-color: var(--color-primary);
 }
 
 .service-section[data-category="fotografia"] .section-title {
     color: var(--color-light);
-    border-bottom-color: var(--color-light);
+    border-bottom-color: var(--color-primary);
 }
 
 .service-section[data-category="combo"] .section-title {
     color: var(--color-light);
-    border-bottom-color: var(--color-light);
+    border-bottom-color: var(--color-primary);
 }
 
 .service-section[data-category="taxas"] .section-title {
