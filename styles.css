@@ -282,7 +282,7 @@ body {
 
 /* Budget summary */
 .budget-summary {
-    background: var(--color-light);
+    background-color: var(--color-dark-700);
     border-radius: calc(var(--border-radius) * 2);
     padding: var(--space-5);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
@@ -334,7 +334,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: var(--space-3);
-    background-color: var(--color-dark-700);
+    background: var(--color-light-800);
     border-radius: var(--border-radius);
     margin-bottom: var(--space-2);
     border-left: 4px solid var(--color-primary);
