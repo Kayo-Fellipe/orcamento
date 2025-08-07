@@ -285,8 +285,6 @@ body {
     background-color: var(--color-dark-700);
     border-radius: calc(var(--border-radius) * 2);
     padding: var(--space-5);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    border: 1px solid var(--color-light-700);
 }
 
 .summary-title {
