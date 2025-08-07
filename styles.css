@@ -137,7 +137,7 @@ body {
     font-weight: 600;
     margin-bottom: var(--space-4);
     padding-bottom: var(--space-3);
-    border-bottom: 1px solid;
+    border-bottom: 2px solid;
 }
 
 /* Cores por categoria */
@@ -233,7 +233,7 @@ body {
     font-size: 0.875rem;
     font-weight: 500;
     transition: var(--transition);
-    background: var(--color-light);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .custom-value-input {
@@ -243,7 +243,7 @@ body {
     font-size: 0.875rem;
     font-weight: 500;
     transition: var(--transition);
-    background: var(--color-light);
+    background: rgba(255, 255, 255, 0.1);
     width: 100%;
     margin-top: var(--space-2);
 }
