@@ -211,7 +211,6 @@ class BudgetCalculator {
         };
 
         this.updateTransportCalculation();
-        this.updateSummary();
     }
 
     removeTransportFee() {
@@ -447,18 +446,14 @@ class BudgetCalculator {
         }
 
         this.selectedFees.forEach(fee => {
-            const feeItem = document.createElement('div');
-            feeItem.classList.add('fee-item');
-            feeItem.textContent = `${fee.name} – R$ ${fee.price.toFixed(2)}`;
-            feesSection.appendChild(feeItem);
+            const summaryElement = this.createFeeSummaryElement(fee);
+            feesContainer.appendChild(summaryElement);
         });
 
-        // 👉 Adicionar taxa de transporte, se existir
-        if (this.transportFee) {
-            const transportItem = document.createElement('div');
-            transportItem.classList.add('fee-item');
-            transportItem.textContent = `${this.transportFee.name} – R$ ${this.transportFee.rate.toFixed(2)}`;
-            feesSection.appendChild(transportItem);
+        // Adicionar taxa de transporte se existir
+        if (this.transportFee && this.transportFee.hours > 0) {
+            const transportSummary = this.createTransportSummaryElement();
+            feesContainer.appendChild(transportSummary);
         }
     }
 
