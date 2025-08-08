@@ -163,24 +163,59 @@ body {
 /* Grid de serviços */
 .services-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: var(--space-3);
 }
 
 /* Cards de serviço */
 .service-card {
+    display: flex;
+    flex-direction: column;
     border-radius: var(--border-radius);
     padding: var(--space-4);
     transition: var(--transition);
     background-color: var(--color-dark-700);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.service-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    border-color: rgba(138, 43, 226, 0.3);
+}
+
+.service-card:hover::before {
+    opacity: 1;
 }
 
 .service-header {
     display: flex;
+    flex-direction: column;
+    margin-bottom: var(--space-3);
+    gap: var(--space-2);
+    flex: 1;
+}
+
+.service-info {
+    display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: var(--space-3);
     gap: var(--space-3);
+    margin-bottom: var(--space-2);
 }
 
 .service-label {
@@ -189,6 +224,7 @@ body {
     gap: var(--space-3);
     cursor: pointer;
     flex: 1;
+    min-height: 44px;
 }
 
 .service-checkbox {
@@ -229,23 +265,31 @@ body {
 .service-name {
     font-weight: 600;
     color: var(--color-light);
-    line-height: 1.4;
+    line-height: 1.5;
+    font-size: 0.95rem;
+    margin-top: 2px;
 }
 
 .service-price {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     color: var(--color-success);
     font-weight: 700;
     white-space: nowrap;
     background: rgba(16, 185, 129, 0.1);
     padding: var(--space-1) var(--space-2);
     border-radius: var(--border-radius);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    align-self: flex-start;
 }
 
 .service-controls {
     display: flex;
-    gap: var(--space-2);
+    gap: var(--space-3);
     align-items: center;
+    flex-wrap: wrap;
+    margin-top: auto;
+    padding-top: var(--space-2);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .hours-input, .price-variant {
@@ -256,6 +300,7 @@ body {
     transition: var(--transition);
     background: rgba(255, 255, 255, 0.1);
     color: var(--color-light);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .custom-value-input {
@@ -267,6 +312,7 @@ body {
     background: rgba(255, 255, 255, 0.1);
     width: 100%;
     margin-top: var(--space-2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .hours-input {
@@ -278,7 +324,8 @@ body {
 }
 
 .price-variant {
-    min-width: 140px;
+    min-width: 160px;
+    flex: 1;
     font-size: 0.75rem;
 }
 
@@ -290,6 +337,34 @@ body {
 
 .hours-input:disabled, .price-variant:disabled, .custom-value-input:disabled {
     cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Cards desabilitados */
+.service-card.disabled {
+    opacity: 0.6;
+    background-color: var(--color-dark-600);
+    cursor: not-allowed;
+}
+
+.service-card.disabled:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.service-card.disabled::before {
+    display: none;
+}
+
+.service-card.disabled .service-name {
+    color: var(--color-gray);
+}
+
+.service-card.disabled .service-price {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--color-error);
+    border-color: rgba(239, 68, 68, 0.2);
 }
 
 /* Budget summary */
