@@ -438,20 +438,22 @@ class BudgetCalculator {
         feesContainer.innerHTML = '';
 
         const hasRegularFees = this.selectedFees.size > 0;
-        const hasTransportFee = this.transportFee && this.transportFee.total > 0;
+        // CORREÇÃO: Verificar apenas se transportFee existe, não se tem horas ou total
+        const hasTransportFee = this.transportFee !== null;
 
         if (!hasRegularFees && !hasTransportFee) {
             feesContainer.innerHTML = '<p class="no-services">Nenhuma taxa selecionada</p>';
             return;
         }
 
+        // Adicionar taxas regulares primeiro
         this.selectedFees.forEach(fee => {
             const summaryElement = this.createFeeSummaryElement(fee);
             feesContainer.appendChild(summaryElement);
         });
 
-        // Adicionar taxa de transporte se existir
-        if (this.transportFee && this.transportFee.hours > 0) {
+        // CORREÇÃO: Adicionar taxa de transporte se existir, mesmo com 0 horas
+        if (this.transportFee) {
             const transportSummary = this.createTransportSummaryElement();
             feesContainer.appendChild(transportSummary);
         }
@@ -563,7 +565,7 @@ class BudgetCalculator {
     }
 
     clearAllServices() {
-        const hasServices = this.selectedServices.size > 0 || this.selectedFees.size > 0;
+        const hasServices = this.selectedServices.size > 0 || this.selectedFees.size > 0 || this.transportFee;
         
         if (!hasServices) return;
 
@@ -617,7 +619,7 @@ class BudgetCalculator {
     }
 
     exportBudget() {
-        const hasItems = this.selectedServices.size > 0 || this.selectedFees.size > 0;
+        const hasItems = this.selectedServices.size > 0 || this.selectedFees.size > 0 || this.transportFee;
         
         if (!hasItems) {
             alert('Nenhum serviço ou taxa selecionado para exportar.');
@@ -651,7 +653,7 @@ class BudgetCalculator {
         }
 
         // Taxas
-        if (this.selectedFees.size > 0 || (this.transportFee && this.transportFee.hours > 0)) {
+        if (this.selectedFees.size > 0 || this.transportFee) {
             exportText += 'TAXAS DE SERVIÇO:\n';
             exportText += '-'.repeat(50) + '\n';
 
@@ -663,7 +665,7 @@ class BudgetCalculator {
             });
 
             // Adicionar taxa de transporte na exportação
-            if (this.transportFee && this.transportFee.hours > 0) {
+            if (this.transportFee) {
                 const transportTotal = this.transportFee.hours * this.transportFee.rate;
                 subtotalFees += transportTotal;
                 exportText += `${this.transportFee.name}:\n`;
@@ -728,6 +730,13 @@ class BudgetCalculator {
             style: 'currency',
             currency: 'BRL'
         }).format(value);
+    }
+
+    updateTransportRate() {
+        if (this.transportFee) {
+            this.transportFee.rate = this.calculateTransportRate();
+            this.updateTransportCalculation();
+        }
     }
 }
 
