@@ -211,6 +211,7 @@ class BudgetCalculator {
         };
 
         this.updateTransportCalculation();
+        this.updateFeesSection();
     }
 
     removeTransportFee() {
