@@ -41,6 +41,7 @@ class BudgetCalculator {
         customValueFields.forEach(field => {
             field.addEventListener('input', (e) => {
                 this.formatCurrencyInput(e.target);
+                this.handleCustomValueChange(e.target);
             });
             
             field.addEventListener('blur', (e) => {
