@@ -434,29 +434,31 @@ class BudgetCalculator {
         });
     }
 
-    updateFeesSection() {
-        const feesContainer = document.getElementById('selectedFees');
-        feesContainer.innerHTML = '';
+updateFeesSection() {
+    const feesSection = document.getElementById('selected-fees');
+    feesSection.innerHTML = '';
 
-        const hasRegularFees = this.selectedFees.size > 0;
-        const hasTransportFee = this.transportFee && this.transportFee.total > 0;
-
-        if (!hasRegularFees && !hasTransportFee) {
-            feesContainer.innerHTML = '<p class="no-services">Nenhuma taxa selecionada</p>';
-            return;
-        }
-
-        this.selectedFees.forEach(fee => {
-            const summaryElement = this.createFeeSummaryElement(fee);
-            feesContainer.appendChild(summaryElement);
-        });
-
-        // Adicionar taxa de transporte se existir
-        if (this.transportFee && this.transportFee.hours > 0) {
-            const transportSummary = this.createTransportSummaryElement();
-            feesContainer.appendChild(transportSummary);
-        }
+    if (this.selectedFees.size === 0 && !this.transportFee) {
+        feesSection.innerHTML = '<p>Nenhuma taxa selecionada</p>';
+        return;
     }
+
+    // Listar taxas personalizadas
+    this.selectedFees.forEach(fee => {
+        const feeItem = document.createElement('div');
+        feeItem.classList.add('fee-item');
+        feeItem.textContent = `${fee.name} – R$ ${fee.price.toFixed(2)}`;
+        feesSection.appendChild(feeItem);
+    });
+
+    // 👉 Adicionar taxa de transporte, se existir
+    if (this.transportFee) {
+        const transportItem = document.createElement('div');
+        transportItem.classList.add('fee-item');
+        transportItem.textContent = `${this.transportFee.name} – R$ ${this.transportFee.rate.toFixed(2)}`;
+        feesSection.appendChild(transportItem);
+    }
+}
 
     updateDiscountSection() {
         const discountSection = document.getElementById('discountSection');
