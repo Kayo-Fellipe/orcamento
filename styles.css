@@ -523,14 +523,15 @@ body {
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 
 .installment-label {
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--color-light);
-    min-width: 80px;
+    min-width: 70px;
+    flex-shrink: 0;
 }
 
 .installment-input {
@@ -542,8 +543,9 @@ body {
     background: rgba(255, 255, 255, 0.1);
     color: var(--color-light);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    width: 100px;
+    width: 90px;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .installment-input:focus {
@@ -779,6 +781,26 @@ body {
         gap: var(--space-2);
     }
 
+    .installment-controls {
+        gap: var(--space-2);
+    }
+
+    .installment-row {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .installment-label {
+        font-size: 0.8rem;
+        min-width: 60px;
+    }
+
+    .installment-input {
+        width: 80px;
+        font-size: 0.8rem;
+        padding: var(--space-1) var(--space-2);
+    }
     .hours-input, .price-variant {
         width: 100%;
     }

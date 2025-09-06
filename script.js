@@ -291,7 +291,30 @@ class BudgetCalculator {
         const fieldType = field.dataset.field;
         const value = fieldType === 'parcelas' ? parseInt(field.value) || 1 : parseFloat(field.value) || 0;
         
-        this.installment[fieldType] = value;
+        // Validar limites
+        if (fieldType === 'parcelas') {
+            if (value < 1) {
+                field.value = '1';
+                this.installment[fieldType] = 1;
+            } else if (value > 24) {
+                field.value = '24';
+                this.installment[fieldType] = 24;
+            } else {
+                this.installment[fieldType] = value;
+            }
+        } else {
+            // Campo de juros
+            if (value < 0) {
+                field.value = '0.00';
+                this.installment[fieldType] = 0;
+            } else if (value > 100) {
+                field.value = '100.00';
+                this.installment[fieldType] = 100;
+            } else {
+                this.installment[fieldType] = value;
+            }
+        }
+        
         this.updateSummary();
     }
 
