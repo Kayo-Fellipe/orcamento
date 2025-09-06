@@ -593,6 +593,27 @@
                                 </div>
                             </div>
                         </div>
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <div class="service-info">
+                                        <label class="service-label">
+                                            <input type="checkbox" class="service-checkbox" data-service="parcelamento" data-type="installment">
+                                            <span class="service-name">Parcelamento com Juros</span>
+                                        </label>
+                                        <span class="service-price">Calculado automaticamente</span>
+                                    </div>
+                                    <div class="service-controls installment-controls">
+                                        <div class="installment-row">
+                                            <label class="installment-label">Parcelas:</label>
+                                            <input type="number" placeholder="1" class="installment-input" data-field="parcelas" min="1" max="24" disabled>
+                                        </div>
+                                        <div class="installment-row">
+                                            <label class="installment-label">Juros (%):</label>
+                                            <input type="number" placeholder="0.00" class="installment-input" data-field="juros" min="0" max="100" step="0.01" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                     </section>
                 </div>
 
@@ -623,6 +644,11 @@
                             </div>
                         </div>
 
+                        <div class="summary-section" id="installmentSection" style="display: none;">
+                            <h3>Parcelamento</h3>
+                            <div class="selected-installment" id="selectedInstallment">
+                            </div>
+                        </div>
                         <div class="totals-section">
                             <div class="total-row">
                                 <span>Total de Horas:</span>
@@ -641,8 +667,12 @@
                                 <span id="discountValue">- R$ 0,00</span>
                             </div>
                             <div class="total-row final-total">
-                                <span>Valor Total:</span>
+                                <span>Valor à Vista:</span>
                                 <span id="totalValue">R$ 0,00</span>
+                            </div>
+                            <div class="total-row installment-total" id="installmentTotalRow" style="display: none;">
+                                <span>Valor Parcelado:</span>
+                                <span id="installmentTotalValue">R$ 0,00</span>
                             </div>
                         </div>
 

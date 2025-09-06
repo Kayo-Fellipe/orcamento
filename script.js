@@ -4,6 +4,7 @@ class BudgetCalculator {
         this.selectedFees = new Map();
         this.transportFee = null;
         this.discount = 0;
+        this.installment = null;
         this.initializeEventListeners();
         this.updateSummary();
     }
@@ -50,6 +51,14 @@ class BudgetCalculator {
             });
         });
 
+        // Campos de parcelamento
+        const installmentFields = document.querySelectorAll('.installment-input');
+        installmentFields.forEach(field => {
+            field.addEventListener('input', (e) => {
+                this.handleInstallmentChange(e.target);
+            });
+        });
+
         // Seletores de preço (variants)
         const priceVariants = document.querySelectorAll('.price-variant');
         priceVariants.forEach(select => {
@@ -87,6 +96,9 @@ class BudgetCalculator {
                 } else if (serviceId === 'desconto') {
                     const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
                     this.handleDiscountSelection(checkbox, customValueField, true);
+                } else if (serviceId === 'parcelamento') {
+                    const installmentFields = document.querySelectorAll('.installment-input');
+                    this.handleInstallmentSelection(checkbox, installmentFields, true);
                 } else {
                     const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
                     
@@ -130,6 +142,9 @@ class BudgetCalculator {
                 } else if (serviceId === 'desconto') {
                     const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
                     this.handleDiscountSelection(checkbox, customValueField, false);
+                } else if (serviceId === 'parcelamento') {
+                    const installmentFields = document.querySelectorAll('.installment-input');
+                    this.handleInstallmentSelection(checkbox, installmentFields, false);
                 } else {
                     const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
                     
@@ -236,6 +251,48 @@ class BudgetCalculator {
             customValueField.value = '';
             this.discount = 0;
         }
+    }
+
+    handleInstallmentSelection(checkbox, installmentFields, isSelected) {
+        if (isSelected) {
+            installmentFields.forEach(field => {
+                field.disabled = false;
+            });
+            
+            // Valores padrão
+            const parcelasField = document.querySelector('.installment-input[data-field="parcelas"]');
+            const jurosField = document.querySelector('.installment-input[data-field="juros"]');
+            
+            if (parcelasField && !parcelasField.value) {
+                parcelasField.value = '1';
+            }
+            if (jurosField && !jurosField.value) {
+                jurosField.value = '0.00';
+            }
+            
+            this.installment = {
+                parcelas: parseInt(parcelasField.value) || 1,
+                juros: parseFloat(jurosField.value) || 0
+            };
+            
+            parcelasField.focus();
+        } else {
+            installmentFields.forEach(field => {
+                field.disabled = true;
+                field.value = '';
+            });
+            this.installment = null;
+        }
+    }
+
+    handleInstallmentChange(field) {
+        if (!this.installment) return;
+        
+        const fieldType = field.dataset.field;
+        const value = fieldType === 'parcelas' ? parseInt(field.value) || 1 : parseFloat(field.value) || 0;
+        
+        this.installment[fieldType] = value;
+        this.updateSummary();
     }
 
     formatTimeInput(input) {
@@ -415,6 +472,7 @@ class BudgetCalculator {
         this.updateServicesSection();
         this.updateFeesSection();
         this.updateDiscountSection();
+        this.updateInstallmentSection();
         this.updateTotals();
     }
 
@@ -481,6 +539,74 @@ class BudgetCalculator {
             discountSection.style.display = 'none';
             discountRow.style.display = 'none';
         }
+    }
+
+    updateInstallmentSection() {
+        const installmentSection = document.getElementById('installmentSection');
+        const installmentContainer = document.getElementById('selectedInstallment');
+        const installmentTotalRow = document.getElementById('installmentTotalRow');
+        
+        if (this.installment && this.installment.parcelas > 1) {
+            const totalValue = this.calculateTotalValue();
+            const installmentCalculation = this.calculateInstallment(totalValue, this.installment.parcelas, this.installment.juros);
+            
+            installmentSection.style.display = 'block';
+            installmentTotalRow.style.display = 'flex';
+            
+            installmentContainer.innerHTML = `
+                <div class="installment-summary">
+                    <div class="installment-summary-header">
+                        <span>Parcelamento em ${this.installment.parcelas}x</span>
+                        <span>Juros: ${this.installment.juros.toFixed(2)}%</span>
+                    </div>
+                    <div class="installment-summary-details">
+                        <div class="installment-detail-row">
+                            <span>Valor à vista:</span>
+                            <span>${this.formatCurrency(totalValue)}</span>
+                        </div>
+                        <div class="installment-detail-row">
+                            <span>Valor da parcela:</span>
+                            <span>${this.formatCurrency(installmentCalculation.valorParcela)}</span>
+                        </div>
+                        <div class="installment-detail-row">
+                            <span>Total com juros:</span>
+                            <span>${this.formatCurrency(installmentCalculation.valorTotal)}</span>
+                        </div>
+                        <div class="installment-detail-row">
+                            <span>Juros totais:</span>
+                            <span>${this.formatCurrency(installmentCalculation.valorTotal - totalValue)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('installmentTotalValue').textContent = this.formatCurrency(installmentCalculation.valorTotal);
+        } else {
+            installmentSection.style.display = 'none';
+            installmentTotalRow.style.display = 'none';
+        }
+    }
+
+    calculateInstallment(valorTotal, numeroParcelas, taxaJuros) {
+        if (numeroParcelas <= 1 || taxaJuros <= 0) {
+            return {
+                valorParcela: valorTotal,
+                valorTotal: valorTotal
+            };
+        }
+        
+        // Converter taxa de juros de porcentagem para decimal mensal
+        const taxaMensal = taxaJuros / 100;
+        
+        // Fórmula do sistema de amortização francês (Price)
+        const coeficiente = Math.pow(1 + taxaMensal, numeroParcelas);
+        const valorParcela = valorTotal * (taxaMensal * coeficiente) / (coeficiente - 1);
+        const valorTotalComJuros = valorParcela * numeroParcelas;
+        
+        return {
+            valorParcela: valorParcela,
+            valorTotal: valorTotalComJuros
+        };
     }
 
     updateTotals() {
@@ -610,11 +736,19 @@ class BudgetCalculator {
                 }
             });
 
+            // Limpar parcelamento
+            const installmentFields = document.querySelectorAll('.installment-input');
+            installmentFields.forEach(field => {
+                field.disabled = true;
+                field.value = '';
+            });
+
             // Limpar mapas
             this.selectedServices.clear();
             this.selectedFees.clear();
             this.transportFee = null;
             this.discount = 0;
+            this.installment = null;
             this.updateSummary();
         }
     }
@@ -681,7 +815,18 @@ class BudgetCalculator {
         // Total final
         const totalValue = this.calculateTotalValue();
         exportText += '-'.repeat(50) + '\n';
-        exportText += `VALOR TOTAL: ${this.formatCurrency(totalValue)}\n`;
+        exportText += `VALOR À VISTA: ${this.formatCurrency(totalValue)}\n`;
+        
+        // Adicionar informações de parcelamento se existir
+        if (this.installment && this.installment.parcelas > 1) {
+            const installmentCalculation = this.calculateInstallment(totalValue, this.installment.parcelas, this.installment.juros);
+            exportText += `\nPARCELAMENTO:\n`;
+            exportText += `• ${this.installment.parcelas}x de ${this.formatCurrency(installmentCalculation.valorParcela)}\n`;
+            exportText += `• Taxa de juros: ${this.installment.juros.toFixed(2)}% ao mês\n`;
+            exportText += `• Valor total parcelado: ${this.formatCurrency(installmentCalculation.valorTotal)}\n`;
+            exportText += `• Juros totais: ${this.formatCurrency(installmentCalculation.valorTotal - totalValue)}\n`;
+        }
+        
         exportText += '-'.repeat(50) + '\n\n';
         
         exportText += 'Observações:\n';

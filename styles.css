@@ -512,6 +512,101 @@ body {
     font-weight: 700;
 }
 
+/* Installment styles */
+.installment-controls {
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: stretch;
+}
+
+.installment-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    justify-content: space-between;
+}
+
+.installment-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-light);
+    min-width: 80px;
+}
+
+.installment-input {
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: var(--transition);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-light);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100px;
+    text-align: center;
+}
+
+.installment-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.1);
+}
+
+.installment-input:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.installment-summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    background: rgba(138, 43, 226, 0.1);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--space-2);
+    border-left: 4px solid var(--color-primary);
+    animation: fadeIn 0.3s ease;
+}
+
+.installment-summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    color: var(--color-light);
+    font-size: 0.875rem;
+}
+
+.installment-summary-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    font-size: 0.75rem;
+    color: var(--color-gray-light);
+}
+
+.installment-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.installment-total {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    border-top: 1px solid var(--color-light-700);
+    margin-top: var(--space-2);
+    padding-top: var(--space-2);
+    background: rgba(138, 43, 226, 0.05);
+    margin-left: calc(var(--space-3) * -1);
+    margin-right: calc(var(--space-3) * -1);
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+    border-radius: var(--border-radius);
+}
+
 .totals-section {
     border-top: 2px solid var(--color-light-700);
     padding-top: var(--space-3);
