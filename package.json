@@ -1,0 +1,16 @@
+{
+  "name": "orcamento-calculator",
+  "version": "1.0.0",
+  "description": "Sistema de cálculo de orçamentos com parcelamento",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve ."
+  },
+  "keywords": ["orcamento", "calculator", "parcelamento"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}
