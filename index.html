@@ -1,39 +1,105 @@
-@@ .. @@
-                 <div class="service-tax-section">
-                     <h3>Taxas de Serviço</h3>
-                     
-                     <div class="tax-option">
-                         <label>
-                             <input type="checkbox" id="urgencyTax"> Taxa de Urgência (20%)
-                         </label>
-                     </div>
-                     
-                     <div class="tax-option">
-                         <label>
-                             <input type="checkbox" id="complexityTax"> Taxa de Complexidade (15%)
-                         </label>
-                     </div>
-+                    
-+                    <div class="tax-option">
-+                        <label>
-+                            <input type="checkbox" id="installmentTax"> Parcelamento com Juros
-+                        </label>
-+                    </div>
-+                    
-+                    <div class="installment-fields" id="installmentFields" style="display: none;">
-+                        <div class="installment-row">
-+                            <div class="field-group">
-+                                <label for="installmentCount">Número de Parcelas:</label>
-+                                <input type="number" id="installmentCount" min="2" max="24" value="2">
-+                            </div>
-+                            <div class="field-group">
-+                                <label for="interestRate">Taxa de Juros (% ao mês):</label>
-+                                <input type="number" id="interestRate" min="0" max="50" step="0.01" value="0">
-+                            </div>
-+                        </div>
-+                        
-+                        <div class="installment-summary" id="installmentSummary">
-+                            <!-- Resumo será preenchido via JavaScript -->
-+                        </div>
-+                    </div>
-                 </div>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Orçamento</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Calculadora de Orçamento</h1>
+            <p>Sistema profissional para cálculo de orçamentos</p>
+        </header>
+
+        <main>
+            <div class="content-grid">
+                <div class="form-section">
+                    <div class="service-form">
+                        <h2>Adicionar Serviço</h2>
+                        
+                        <div class="form-group">
+                            <label for="serviceName">Nome do Serviço:</label>
+                            <input type="text" id="serviceName" placeholder="Ex: Desenvolvimento de Website">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="servicePrice">Preço (R$):</label>
+                                <input type="number" id="servicePrice" min="0" step="0.01" placeholder="0,00">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="serviceQuantity">Quantidade:</label>
+                                <input type="number" id="serviceQuantity" min="1" value="1">
+                            </div>
+                        </div>
+                        
+                        <button type="button" id="addService" class="btn-primary">Adicionar Serviço</button>
+                    </div>
+
+                    <div class="service-tax-section">
+                        <h3>Taxas de Serviço</h3>
+                        
+                        <div class="tax-option">
+                            <label>
+                                <input type="checkbox" id="urgencyTax"> Taxa de Urgência (20%)
+                            </label>
+                        </div>
+                        
+                        <div class="tax-option">
+                            <label>
+                                <input type="checkbox" id="complexityTax"> Taxa de Complexidade (15%)
+                            </label>
+                        </div>
+                        
+                        <div class="tax-option">
+                            <label>
+                                <input type="checkbox" id="installmentTax"> Parcelamento com Juros
+                            </label>
+                        </div>
+                        
+                        <div class="installment-fields" id="installmentFields" style="display: none;">
+                            <div class="installment-row">
+                                <div class="field-group">
+                                    <label for="installmentCount">Número de Parcelas:</label>
+                                    <input type="number" id="installmentCount" min="2" max="24" value="2">
+                                </div>
+                                <div class="field-group">
+                                    <label for="interestRate">Taxa de Juros (% ao mês):</label>
+                                    <input type="number" id="interestRate" min="0" max="50" step="0.01" value="0">
+                                </div>
+                            </div>
+                            
+                            <div class="installment-summary" id="installmentSummary">
+                                <!-- Resumo será preenchido via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="summary-section">
+                    <div class="services-list">
+                        <h3>Serviços Adicionados</h3>
+                        <div id="servicesList">
+                            <p class="empty-state">Nenhum serviço adicionado ainda</p>
+                        </div>
+                    </div>
+
+                    <div class="total-summary">
+                        <h3>Resumo do Orçamento</h3>
+                        <div class="total-price">
+                            <span>Total: </span>
+                            <span id="totalPrice">R$ 0,00</span>
+                        </div>
+                        <button type="button" id="exportBudget" class="btn-secondary">Exportar Orçamento</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
