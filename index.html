@@ -605,11 +605,14 @@
                                     <div class="service-controls installment-controls">
                                         <div class="installment-row">
                                             <label class="installment-label">Parcelas:</label>
-                                            <input type="number" placeholder="1" class="installment-input" data-field="parcelas" min="1" max="24" disabled>
+                                            <input type="number" placeholder="2-24" class="installment-input" data-field="parcelas" min="1" max="24" disabled>
                                         </div>
                                         <div class="installment-row">
                                             <label class="installment-label">Juros (%):</label>
-                                            <input type="number" placeholder="0.00" class="installment-input" data-field="juros" min="0" max="100" step="0.01" disabled>
+                                            <input type="number" placeholder="2.99" class="installment-input" data-field="juros" min="0" max="100" step="0.01" disabled>
+                                        </div>
+                                        <div class="installment-info">
+                                            <small>Simule o valor das parcelas com juros. Os valores são calculados usando o sistema de amortização francês (Price).</small>
                                         </div>
                                     </div>
                                 </div>

@@ -54,7 +54,16 @@ class BudgetCalculator {
         // Campos de parcelamento
         const installmentFields = document.querySelectorAll('.installment-input');
         installmentFields.forEach(field => {
+            // Remover qualquer event listener existente para evitar duplicação
+            field.removeEventListener('input', this.handleInstallmentChange);
+            field.removeEventListener('change', this.handleInstallmentChange);
+            
+            // Adicionar event listeners para input e change
             field.addEventListener('input', (e) => {
+                this.handleInstallmentChange(e.target);
+            });
+            
+            field.addEventListener('change', (e) => {
                 this.handleInstallmentChange(e.target);
             });
         });
@@ -80,9 +89,13 @@ class BudgetCalculator {
     handleServiceSelection(checkbox) {
         const serviceId = checkbox.dataset.service;
         const isCustom = checkbox.dataset.type === 'custom';
+        const isInstallment = checkbox.dataset.type === 'installment';
         
         if (checkbox.checked) {
-            if (isCustom) {
+            if (isInstallment || serviceId === 'parcelamento') {
+                const installmentFields = document.querySelectorAll('.installment-input');
+                this.handleInstallmentSelection(checkbox, installmentFields, true);
+            } else if (isCustom) {
                 if (serviceId === 'transporte') {
                     const hoursField = document.querySelector(`.hours-input[data-service="${serviceId}"]`);
                     
@@ -96,9 +109,6 @@ class BudgetCalculator {
                 } else if (serviceId === 'desconto') {
                     const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
                     this.handleDiscountSelection(checkbox, customValueField, true);
-                } else if (serviceId === 'parcelamento') {
-                    const installmentFields = document.querySelectorAll('.installment-input');
-                    this.handleInstallmentSelection(checkbox, installmentFields, true);
                 } else {
                     const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
                     
@@ -128,7 +138,10 @@ class BudgetCalculator {
                 this.addService(serviceId, checkbox, hoursField, priceVariant);
             }
         } else {
-            if (isCustom) {
+            if (isInstallment || serviceId === 'parcelamento') {
+                const installmentFields = document.querySelectorAll('.installment-input');
+                this.handleInstallmentSelection(checkbox, installmentFields, false);
+            } else if (isCustom) {
                 if (serviceId === 'transporte') {
                     const hoursField = document.querySelector(`.hours-input[data-service="${serviceId}"]`);
                     
@@ -142,9 +155,6 @@ class BudgetCalculator {
                 } else if (serviceId === 'desconto') {
                     const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
                     this.handleDiscountSelection(checkbox, customValueField, false);
-                } else if (serviceId === 'parcelamento') {
-                    const installmentFields = document.querySelectorAll('.installment-input');
-                    this.handleInstallmentSelection(checkbox, installmentFields, false);
                 } else {
                     const customValueField = document.querySelector(`.custom-value-input[data-service="${serviceId}"]`);
                     
@@ -255,27 +265,42 @@ class BudgetCalculator {
 
     handleInstallmentSelection(checkbox, installmentFields, isSelected) {
         if (isSelected) {
-            installmentFields.forEach(field => {
-                field.disabled = false;
-            });
-            
             // Valores padrão
             const parcelasField = document.querySelector('.installment-input[data-field="parcelas"]');
             const jurosField = document.querySelector('.installment-input[data-field="juros"]');
             
-            if (parcelasField && !parcelasField.value) {
-                parcelasField.value = '1';
+            // Primeiro habilitar os campos
+            installmentFields.forEach(field => {
+                field.disabled = false;
+                field.readOnly = false; // Garantir que não esteja como somente leitura
+            });
+            
+            // Definir valores padrão se necessário
+            if (parcelasField && (!parcelasField.value || parcelasField.value === '0')) {
+                parcelasField.value = '2'; // Default to 2 installments
             }
-            if (jurosField && !jurosField.value) {
-                jurosField.value = '0.00';
+            if (jurosField && (!jurosField.value || parseFloat(jurosField.value.replace(',', '.')) === 0)) {
+                jurosField.value = '2,99'; // Default interest rate with comma as decimal separator
             }
+            
+            // Atualizar o objeto de parcelamento - garantir que os valores sejam numéricos
+            const parcelas = parseInt(parcelasField.value) || 2;
+            const juros = parseFloat(jurosField.value.replace(',', '.')) || 2.99;
             
             this.installment = {
-                parcelas: parseInt(parcelasField.value) || 1,
-                juros: parseFloat(jurosField.value) || 0
+                parcelas: parcelas,
+                juros: juros
             };
             
-            parcelasField.focus();
+            // Focar no campo de parcelas após um pequeno delay para garantir que o navegador processou as mudanças
+            setTimeout(() => {
+                parcelasField.focus();
+                // Tentar selecionar todo o texto para facilitar a edição
+                parcelasField.select();
+            }, 50);
+            
+            // Force update summary to show installment calculation immediately
+            this.updateSummary();
         } else {
             installmentFields.forEach(field => {
                 field.disabled = true;
@@ -289,9 +314,23 @@ class BudgetCalculator {
         if (!this.installment) return;
         
         const fieldType = field.dataset.field;
-        const value = fieldType === 'parcelas' ? parseInt(field.value) || 1 : parseFloat(field.value) || 0;
         
-        this.installment[fieldType] = value;
+        // Validate and set appropriate values
+        if (fieldType === 'parcelas') {
+            // Ensure parcelas is at least 1 and at most 24
+            let value = parseInt(field.value) || 1;
+            value = Math.max(1, Math.min(24, value));
+            field.value = value.toString(); // Update field with validated value
+            this.installment.parcelas = value;
+        } else if (fieldType === 'juros') {
+            // Ensure juros is at least 0 and has proper decimal format
+            // Replace comma with period for proper parsing
+            let value = parseFloat(field.value.replace(',', '.')) || 0;
+            value = Math.max(0, Math.min(100, value)); // Cap at 100%
+            field.value = value.toFixed(2).replace('.', ','); // Format with 2 decimal places using comma
+            this.installment.juros = value; // Store the actual numeric value
+        }
+        
         this.updateSummary();
     }
 
@@ -546,12 +585,15 @@ class BudgetCalculator {
         const installmentContainer = document.getElementById('selectedInstallment');
         const installmentTotalRow = document.getElementById('installmentTotalRow');
         
-        if (this.installment && this.installment.parcelas > 1) {
+        if (this.installment) {
             const totalValue = this.calculateTotalValue();
             const installmentCalculation = this.calculateInstallment(totalValue, this.installment.parcelas, this.installment.juros);
             
             installmentSection.style.display = 'block';
             installmentTotalRow.style.display = 'flex';
+            
+            // Determine if we should show the interest calculation
+            const showInterestCalculation = this.installment.parcelas > 1 && this.installment.juros > 0;
             
             installmentContainer.innerHTML = `
                 <div class="installment-summary">
@@ -568,6 +610,7 @@ class BudgetCalculator {
                             <span>Valor da parcela:</span>
                             <span>${this.formatCurrency(installmentCalculation.valorParcela)}</span>
                         </div>
+                        ${showInterestCalculation ? `
                         <div class="installment-detail-row">
                             <span>Total com juros:</span>
                             <span>${this.formatCurrency(installmentCalculation.valorTotal)}</span>
@@ -576,6 +619,7 @@ class BudgetCalculator {
                             <span>Juros totais:</span>
                             <span>${this.formatCurrency(installmentCalculation.valorTotal - totalValue)}</span>
                         </div>
+                        ` : ''}
                     </div>
                 </div>
             `;
@@ -595,17 +639,15 @@ class BudgetCalculator {
             };
         }
         
-        // Converter taxa de juros de porcentagem para decimal mensal
-        const taxaMensal = taxaJuros / 100;
+        // Aplicar a taxa de juros diretamente sobre o valor total
+        const taxaJurosPorParcela = taxaJuros / 100;
+        const valorTotalComJuros = valorTotal * (1 + taxaJurosPorParcela);
+        const valorParcela = valorTotalComJuros / numeroParcelas;
         
-        // Fórmula do sistema de amortização francês (Price)
-        const coeficiente = Math.pow(1 + taxaMensal, numeroParcelas);
-        const valorParcela = valorTotal * (taxaMensal * coeficiente) / (coeficiente - 1);
-        const valorTotalComJuros = valorParcela * numeroParcelas;
-        
+        // Arredonda para duas casas decimais para evitar problemas de precisão
         return {
-            valorParcela: valorParcela,
-            valorTotal: valorTotalComJuros
+            valorParcela: Math.round(valorParcela * 100) / 100,
+            valorTotal: Math.round(valorTotalComJuros * 100) / 100
         };
     }
 
