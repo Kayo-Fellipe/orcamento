@@ -648,7 +648,7 @@ class BudgetCalculator {
                         </div>
                         <div class="installment-detail-row">
                             <span>Juros totais:</span>
-                            <span>${this.formatCurrency(installmentCalculation.valorTotal - totalValue)}</span>
+                            <span>${this.formatCurrency(installmentCalculation.jurosTotal)}</span>
                         </div>
                         ` : ''}
                     </div>
@@ -667,27 +667,16 @@ class BudgetCalculator {
         if (numeroParcelas <= 0) numeroParcelas = 1;
         if (taxaJuros < 0) taxaJuros = 0;
         
-        // Se for à vista ou sem juros
-        if (numeroParcelas <= 1 || taxaJuros <= 0) {
-            return {
-                valorParcela: valorTotal,
-                valorTotal: valorTotal
-            };
-        }
-
-        // Fórmula de juros compostos (Price/SAC)
-        const i = taxaJuros / 100; // converter para decimal
-        const n = numeroParcelas;
-
-        // Fórmula Price: PMT = PV * [i * (1 + i)^n] / [(1 + i)^n - 1]
-        const denominador = Math.pow(1 + i, n) - 1;
-        const numerador = i * Math.pow(1 + i, n);
-        const valorParcela = valorTotal * (numerador / denominador);
-        const valorTotalComJuros = valorParcela * n;
+        // Calcular juros simples
+        // Juros total = valor principal × taxa de juros
+        const jurosTotal = valorTotal * (taxaJuros / 100);
+        const valorTotalComJuros = valorTotal + jurosTotal;
+        const valorParcela = valorTotalComJuros / numeroParcelas;
 
         return {
             valorParcela: Math.round(valorParcela * 100) / 100,
-            valorTotal: Math.round(valorTotalComJuros * 100) / 100
+            valorTotal: Math.round(valorTotalComJuros * 100) / 100,
+            jurosTotal: Math.round(jurosTotal * 100) / 100
         };
     }
 
@@ -910,10 +899,10 @@ class BudgetCalculator {
             const installmentCalculation = this.calculateInstallment(totalValue, this.installment.parcelas, this.installment.juros);
             exportText += `\nPARCELAMENTO:\n`;
             exportText += `• ${this.installment.parcelas}x de ${this.formatCurrency(installmentCalculation.valorParcela)}\n`;
-            exportText += `• Taxa de juros: ${this.installment.juros.toFixed(2).replace('.', ',')}% ao mês\n`;
+            exportText += `• Taxa de juros: ${this.installment.juros.toFixed(2).replace('.', ',')}% (juros simples)\n`;
             exportText += `• Valor total parcelado: ${this.formatCurrency(installmentCalculation.valorTotal)}\n`;
-            if (installmentCalculation.valorTotal > totalValue) {
-                exportText += `• Juros totais: ${this.formatCurrency(installmentCalculation.valorTotal - totalValue)}\n`;
+            if (installmentCalculation.jurosTotal > 0) {
+                exportText += `• Juros totais: ${this.formatCurrency(installmentCalculation.jurosTotal)}\n`;
             }
         }
         
