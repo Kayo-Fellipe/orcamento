@@ -51,20 +51,15 @@ class BudgetCalculator {
             });
         });
 
-        // Campos de parcelamento
+        // Campos de parcelamento - com tratamento especial
         const installmentFields = document.querySelectorAll('.installment-input');
         installmentFields.forEach(field => {
-            // Remover qualquer event listener existente para evitar duplicação
-            field.removeEventListener('input', this.handleInstallmentChange);
-            field.removeEventListener('change', this.handleInstallmentChange);
-            
-            // Adicionar event listeners para input e change
             field.addEventListener('input', (e) => {
-                this.handleInstallmentChange(e.target);
+                this.handleInstallmentInput(e.target);
             });
             
-            field.addEventListener('change', (e) => {
-                this.handleInstallmentChange(e.target);
+            field.addEventListener('blur', (e) => {
+                this.handleInstallmentBlur(e.target);
             });
         });
 
@@ -224,6 +219,68 @@ class BudgetCalculator {
         this.updateSummary();
     }
 
+    // Novos métodos para tratar os campos de parcelamento
+    handleInstallmentInput(field) {
+        const fieldType = field.dataset.field;
+        
+        if (fieldType === 'parcelas') {
+            // Permitir apenas números inteiros para parcelas
+            let value = field.value.replace(/[^\d]/g, '');
+            if (value.length > 2) value = value.substring(0, 2); // Máximo 2 dígitos (24)
+            field.value = value;
+        } else if (fieldType === 'juros') {
+            // Permitir números decimais com vírgula para juros
+            let value = field.value.replace(/[^\d,]/g, '');
+            // Permitir apenas uma vírgula
+            const commas = value.split(',');
+            if (commas.length > 2) {
+                value = commas[0] + ',' + commas[1];
+            }
+            // Limitar casas decimais a 2
+            if (commas.length === 2 && commas[1].length > 2) {
+                value = commas[0] + ',' + commas[1].substring(0, 2);
+            }
+            field.value = value;
+        }
+        
+        this.updateInstallmentFromFields();
+    }
+
+    handleInstallmentBlur(field) {
+        const fieldType = field.dataset.field;
+        
+        if (fieldType === 'parcelas') {
+            let value = parseInt(field.value) || 1;
+            value = Math.max(1, Math.min(24, value));
+            field.value = value.toString();
+        } else if (fieldType === 'juros') {
+            let value = parseFloat(field.value.replace(',', '.')) || 0;
+            value = Math.max(0, Math.min(100, value));
+            field.value = value.toFixed(2).replace('.', ',');
+        }
+        
+        this.updateInstallmentFromFields();
+    }
+
+    updateInstallmentFromFields() {
+        if (!this.installment) return;
+        
+        const parcelasField = document.querySelector('.installment-input[data-field="parcelas"]');
+        const jurosField = document.querySelector('.installment-input[data-field="juros"]');
+        
+        if (parcelasField && jurosField) {
+            const parcelas = parseInt(parcelasField.value) || 1;
+            const juros = parseFloat(jurosField.value.replace(',', '.')) || 0;
+            
+            this.installment = {
+                parcelas: parcelas,
+                juros: juros
+            };
+            
+            this.updateSummary();
+        }
+    }
+
     addTransportFee(serviceId, checkbox, hoursField) {
         const serviceCard = checkbox.closest('.service-card');
         const serviceName = serviceCard.querySelector('.service-name').textContent;
@@ -265,25 +322,23 @@ class BudgetCalculator {
 
     handleInstallmentSelection(checkbox, installmentFields, isSelected) {
         if (isSelected) {
-            // Valores padrão
             const parcelasField = document.querySelector('.installment-input[data-field="parcelas"]');
             const jurosField = document.querySelector('.installment-input[data-field="juros"]');
             
-            // Primeiro habilitar os campos
+            // Habilitar os campos
             installmentFields.forEach(field => {
                 field.disabled = false;
-                field.readOnly = false; // Garantir que não esteja como somente leitura
             });
             
-            // Definir valores padrão se necessário
-            if (parcelasField && (!parcelasField.value || parcelasField.value === '0')) {
-                parcelasField.value = '2'; // Default to 2 installments
+            // Definir valores padrão se os campos estão vazios
+            if (parcelasField && !parcelasField.value) {
+                parcelasField.value = '2';
             }
-            if (jurosField && (!jurosField.value || parseFloat(jurosField.value.replace(',', '.')) === 0)) {
-                jurosField.value = '2,99'; // Default interest rate with comma as decimal separator
+            if (jurosField && !jurosField.value) {
+                jurosField.value = '2,99';
             }
             
-            // Atualizar o objeto de parcelamento - garantir que os valores sejam numéricos
+            // Criar objeto de parcelamento
             const parcelas = parseInt(parcelasField.value) || 2;
             const juros = parseFloat(jurosField.value.replace(',', '.')) || 2.99;
             
@@ -292,14 +347,14 @@ class BudgetCalculator {
                 juros: juros
             };
             
-            // Focar no campo de parcelas após um pequeno delay para garantir que o navegador processou as mudanças
+            // Focar no primeiro campo
             setTimeout(() => {
-                parcelasField.focus();
-                // Tentar selecionar todo o texto para facilitar a edição
-                parcelasField.select();
+                if (parcelasField) {
+                    parcelasField.focus();
+                    parcelasField.select();
+                }
             }, 50);
             
-            // Force update summary to show installment calculation immediately
             this.updateSummary();
         } else {
             installmentFields.forEach(field => {
@@ -307,31 +362,8 @@ class BudgetCalculator {
                 field.value = '';
             });
             this.installment = null;
+            this.updateSummary();
         }
-    }
-
-    handleInstallmentChange(field) {
-        if (!this.installment) return;
-        
-        const fieldType = field.dataset.field;
-        
-        // Validate and set appropriate values
-        if (fieldType === 'parcelas') {
-            // Ensure parcelas is at least 1 and at most 24
-            let value = parseInt(field.value) || 1;
-            value = Math.max(1, Math.min(24, value));
-            field.value = value.toString(); // Update field with validated value
-            this.installment.parcelas = value;
-        } else if (fieldType === 'juros') {
-            // Ensure juros is at least 0 and has proper decimal format
-            // Replace comma with period for proper parsing
-            let value = parseFloat(field.value.replace(',', '.')) || 0;
-            value = Math.max(0, Math.min(100, value)); // Cap at 100%
-            field.value = value.toFixed(2).replace('.', ','); // Format with 2 decimal places using comma
-            this.installment.juros = value; // Store the actual numeric value
-        }
-        
-        this.updateSummary();
     }
 
     formatTimeInput(input) {
@@ -486,7 +518,7 @@ class BudgetCalculator {
         const fee = {
             id: serviceId,
             name: serviceName,
-            price: customValueField ? (parseFloat(customValueField.value) || 0) : 0,
+            price: customValueField ? this.parseCurrencyValue(customValueField.value) : 0,
             element: serviceCard
         };
 
@@ -536,7 +568,6 @@ class BudgetCalculator {
         feesContainer.innerHTML = '';
 
         const hasRegularFees = this.selectedFees.size > 0;
-        // CORREÇÃO: Verificar apenas se transportFee existe, não se tem horas ou total
         const hasTransportFee = this.transportFee !== null;
 
         if (!hasRegularFees && !hasTransportFee) {
@@ -550,7 +581,7 @@ class BudgetCalculator {
             feesContainer.appendChild(summaryElement);
         });
 
-        // CORREÇÃO: Adicionar taxa de transporte se existir, mesmo com 0 horas
+        // Adicionar taxa de transporte se existir
         if (this.transportFee) {
             const transportSummary = this.createTransportSummaryElement();
             feesContainer.appendChild(transportSummary);
@@ -585,7 +616,7 @@ class BudgetCalculator {
         const installmentContainer = document.getElementById('selectedInstallment');
         const installmentTotalRow = document.getElementById('installmentTotalRow');
         
-        if (this.installment) {
+        if (this.installment && this.installment.parcelas > 0) {
             const totalValue = this.calculateTotalValue();
             const installmentCalculation = this.calculateInstallment(totalValue, this.installment.parcelas, this.installment.juros);
             
@@ -599,7 +630,7 @@ class BudgetCalculator {
                 <div class="installment-summary">
                     <div class="installment-summary-header">
                         <span>Parcelamento em ${this.installment.parcelas}x</span>
-                        <span>Juros: ${this.installment.juros.toFixed(2)}%</span>
+                        <span>Juros: ${this.installment.juros.toFixed(2).replace('.', ',')}%</span>
                     </div>
                     <div class="installment-summary-details">
                         <div class="installment-detail-row">
@@ -632,18 +663,26 @@ class BudgetCalculator {
     }
 
     calculateInstallment(valorTotal, numeroParcelas, taxaJuros) {
+        // Garantir valores válidos
+        if (numeroParcelas <= 0) numeroParcelas = 1;
+        if (taxaJuros < 0) taxaJuros = 0;
+        
+        // Se for à vista ou sem juros
         if (numeroParcelas <= 1 || taxaJuros <= 0) {
             return {
-                valorParcela: Math.round((valorTotal / numeroParcelas) * 100) / 100,
+                valorParcela: valorTotal,
                 valorTotal: valorTotal
             };
         }
 
+        // Fórmula de juros compostos (Price/SAC)
         const i = taxaJuros / 100; // converter para decimal
         const n = numeroParcelas;
 
-        // Fórmula de juros compostos (Price)
-        const valorParcela = valorTotal * (i / (1 - Math.pow(1 + i, -n)));
+        // Fórmula Price: PMT = PV * [i * (1 + i)^n] / [(1 + i)^n - 1]
+        const denominador = Math.pow(1 + i, n) - 1;
+        const numerador = i * Math.pow(1 + i, n);
+        const valorParcela = valorTotal * (numerador / denominador);
         const valorTotalComJuros = valorParcela * n;
 
         return {
@@ -735,7 +774,7 @@ class BudgetCalculator {
     }
 
     clearAllServices() {
-        const hasServices = this.selectedServices.size > 0 || this.selectedFees.size > 0 || this.transportFee;
+        const hasServices = this.selectedServices.size > 0 || this.selectedFees.size > 0 || this.transportFee || this.installment;
         
         if (!hasServices) return;
 
@@ -747,8 +786,16 @@ class BudgetCalculator {
                 
                 const serviceId = checkbox.dataset.service;
                 const isCustom = checkbox.dataset.type === 'custom';
+                const isInstallment = checkbox.dataset.type === 'installment';
                 
-                if (!isCustom) {
+                if (isInstallment) {
+                    // Limpar campos de parcelamento
+                    const installmentFields = document.querySelectorAll('.installment-input');
+                    installmentFields.forEach(field => {
+                        field.disabled = true;
+                        field.value = '';
+                    });
+                } else if (!isCustom) {
                     const hoursField = document.querySelector(`.hours-input[data-service="${serviceId}"]`);
                     const priceVariant = document.querySelector(`.price-variant[data-service="${serviceId}"]`);
                     
@@ -777,13 +824,6 @@ class BudgetCalculator {
                         }
                     }
                 }
-            });
-
-            // Limpar parcelamento
-            const installmentFields = document.querySelectorAll('.installment-input');
-            installmentFields.forEach(field => {
-                field.disabled = true;
-                field.value = '';
             });
 
             // Limpar mapas
@@ -855,6 +895,11 @@ class BudgetCalculator {
             exportText += `\nSubtotal Taxas: ${this.formatCurrency(subtotalFees)}\n\n`;
         }
 
+        // Desconto
+        if (this.discount > 0) {
+            exportText += `Desconto aplicado: - ${this.formatCurrency(this.discount)}\n\n`;
+        }
+
         // Total final
         const totalValue = this.calculateTotalValue();
         exportText += '-'.repeat(50) + '\n';
@@ -865,9 +910,11 @@ class BudgetCalculator {
             const installmentCalculation = this.calculateInstallment(totalValue, this.installment.parcelas, this.installment.juros);
             exportText += `\nPARCELAMENTO:\n`;
             exportText += `• ${this.installment.parcelas}x de ${this.formatCurrency(installmentCalculation.valorParcela)}\n`;
-            exportText += `• Taxa de juros: ${this.installment.juros.toFixed(2)}% ao mês\n`;
+            exportText += `• Taxa de juros: ${this.installment.juros.toFixed(2).replace('.', ',')}% ao mês\n`;
             exportText += `• Valor total parcelado: ${this.formatCurrency(installmentCalculation.valorTotal)}\n`;
-            exportText += `• Juros totais: ${this.formatCurrency(installmentCalculation.valorTotal - totalValue)}\n`;
+            if (installmentCalculation.valorTotal > totalValue) {
+                exportText += `• Juros totais: ${this.formatCurrency(installmentCalculation.valorTotal - totalValue)}\n`;
+            }
         }
         
         exportText += '-'.repeat(50) + '\n\n';
