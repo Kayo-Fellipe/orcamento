@@ -634,17 +634,18 @@ class BudgetCalculator {
     calculateInstallment(valorTotal, numeroParcelas, taxaJuros) {
         if (numeroParcelas <= 1 || taxaJuros <= 0) {
             return {
-                valorParcela: valorTotal,
+                valorParcela: Math.round((valorTotal / numeroParcelas) * 100) / 100,
                 valorTotal: valorTotal
             };
         }
-        
-        // Aplicar a taxa de juros diretamente sobre o valor total
-        const taxaJurosPorParcela = taxaJuros / 100;
-        const valorTotalComJuros = valorTotal * (1 + taxaJurosPorParcela);
-        const valorParcela = valorTotalComJuros / numeroParcelas;
-        
-        // Arredonda para duas casas decimais para evitar problemas de precisão
+
+        const i = taxaJuros / 100; // converter para decimal
+        const n = numeroParcelas;
+
+        // Fórmula de juros compostos (Price)
+        const valorParcela = valorTotal * (i / (1 - Math.pow(1 + i, -n)));
+        const valorTotalComJuros = valorParcela * n;
+
         return {
             valorParcela: Math.round(valorParcela * 100) / 100,
             valorTotal: Math.round(valorTotalComJuros * 100) / 100
